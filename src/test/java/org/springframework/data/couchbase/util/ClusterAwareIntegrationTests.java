@@ -124,13 +124,15 @@ public abstract class ClusterAwareIntegrationTests {
 
 		for (SeedNode s : seedNodes()) {
 			if (s.kvPort().isPresent()) {
-				if (sb.length() > 0)
+				if (sb.length() > 0) {
 					sb.append(",");
+				}
 				sb.append(s.address() + ":" + s.kvPort().get() + "=" + Services.KV);
 			}
 			if (s.clusterManagerPort().isPresent()) {
-				if (sb.length() > 0)
+				if (sb.length() > 0) {
 					sb.append(",");
+				}
 				sb.append(s.address() + ":" + s.clusterManagerPort().get() + "=" + Services.MANAGER);
 			}
 			if (sb.length() == 0) {

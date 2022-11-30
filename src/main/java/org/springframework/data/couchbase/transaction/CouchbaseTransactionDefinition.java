@@ -26,6 +26,7 @@ import com.couchbase.client.core.annotation.Stability;
  */
 @Stability.Internal
 public class CouchbaseTransactionDefinition extends DefaultTransactionDefinition {
+	private static final long serialVersionUID = 1;
 	public CouchbaseTransactionDefinition() {
 		super();
 		setIsolationLevel(ISOLATION_READ_COMMITTED);

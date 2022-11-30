@@ -23,7 +23,7 @@ package org.springframework.data.couchbase.core.mapping;
  */
 public class KeySettings {
 
-	private static String DEFAULT_DELIMITER = ".";
+	private static String defaultDelimiter = ".";
 
 	private String commonPrefix;
 
@@ -32,7 +32,7 @@ public class KeySettings {
 	private String delimiter;
 
 	protected KeySettings() {
-		this.delimiter = DEFAULT_DELIMITER;
+		this.delimiter = defaultDelimiter;
 	}
 
 	public static KeySettings build() {

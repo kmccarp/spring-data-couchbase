@@ -117,7 +117,7 @@ public class SDKReactiveTransactionsPersonIntegrationTests extends JavaIntegrati
 		Person person = cbTmpl.insertById(Person.class).one(WalterWhite);
 		Mono<TransactionResult> result = couchbaseClientFactory.getCluster().reactive().transactions()
 				.run(ctx -> rxCBTmpl.findById(Person.class).one(person.id()) //
-						.map((pp) -> updateOutOfTransaction(cbTmpl, pp, tryCount.incrementAndGet()))
+						.map(pp -> updateOutOfTransaction(cbTmpl, pp, tryCount.incrementAndGet()))
 						.flatMap(ppp -> rxCBTmpl.replaceById(Person.class).one(ppp.withFirstName("Dave"))));
 		TransactionResult txResult = result.block();
 
@@ -149,10 +149,8 @@ public class SDKReactiveTransactionsPersonIntegrationTests extends JavaIntegrati
 	public void replacePersonCBTransactionsRxTmplRollback() {
 		String newName = "Walt";
 		Person person = cbTmpl.insertById(Person.class).one(WalterWhite);
-		Mono<TransactionResult> result = couchbaseClientFactory.getCluster().reactive().transactions().run(ctx -> { //
-			return rxCBTmpl.findById(Person.class).one(person.id()) //
-					.flatMap(pp -> rxCBTmpl.replaceById(Person.class).one(pp.withFirstName(newName))).then(Mono.empty());
-		});
+		Mono<TransactionResult> result = couchbaseClientFactory.getCluster().reactive().transactions().run(ctx -> rxCBTmpl.findById(Person.class).one(person.id()) //
+					.flatMap(pp -> rxCBTmpl.replaceById(Person.class).one(pp.withFirstName(newName))).then(Mono.empty()));
 		result.block();
 		Person pFound = cbTmpl.findById(Person.class).one(person.id());
 		System.err.println(pFound);
@@ -162,11 +160,7 @@ public class SDKReactiveTransactionsPersonIntegrationTests extends JavaIntegrati
 	@Test
 	public void deletePersonCBTransactionsRxTmpl() {
 		Person person = cbTmpl.insertById(Person.class).inCollection(cName).one(WalterWhite);
-		Mono<TransactionResult> result = couchbaseClientFactory.getCluster().reactive().transactions().run(ctx -> { // get
-																																																								// the
-																																																								// ctx
-			return rxCBTmpl.removeById(Person.class).inCollection(cName).oneEntity(person).then();
-		});
+		Mono<TransactionResult> result = couchbaseClientFactory.getCluster().reactive().transactions().run(ctx -> rxCBTmpl.removeById(Person.class).inCollection(cName).oneEntity(person).then());
 		result.block();
 		Person pFound = cbTmpl.findById(Person.class).inCollection(cName).one(person.id());
 		assertNull(pFound, "Should not have found " + pFound);
@@ -175,12 +169,8 @@ public class SDKReactiveTransactionsPersonIntegrationTests extends JavaIntegrati
 	@Test // ok
 	public void deletePersonCBTransactionsRxTmplFail() {
 		Person person = cbTmpl.insertById(Person.class).inCollection(cName).one(WalterWhite);
-		Mono<TransactionResult> result = couchbaseClientFactory.getCluster().reactive().transactions().run(ctx -> { // get
-																																																								// the
-																																																								// ctx
-			return rxCBTmpl.removeById(Person.class).inCollection(cName).oneEntity(person)
-					.then(rxCBTmpl.removeById(Person.class).inCollection(cName).oneEntity(person));
-		});
+		Mono<TransactionResult> result = couchbaseClientFactory.getCluster().reactive().transactions().run(ctx -> rxCBTmpl.removeById(Person.class).inCollection(cName).oneEntity(person)
+					.then(rxCBTmpl.removeById(Person.class).inCollection(cName).oneEntity(person)));
 		assertThrowsWithCause(result::block, TransactionFailedException.class, DataRetrievalFailureException.class);
 		Person pFound = cbTmpl.findById(Person.class).inCollection(cName).one(person.id());
 		assertEquals(pFound, person, "Should have found " + person);
@@ -189,11 +179,7 @@ public class SDKReactiveTransactionsPersonIntegrationTests extends JavaIntegrati
 	@Test
 	public void deletePersonCBTransactionsRxRepo() {
 		Person person = repo.withCollection(cName).save(WalterWhite);
-		Mono<TransactionResult> result = couchbaseClientFactory.getCluster().reactive().transactions().run(ctx -> { // get
-																																																								// the
-																																																								// ctx
-			return rxRepo.withCollection(cName).delete(person).then();
-		});
+		Mono<TransactionResult> result = couchbaseClientFactory.getCluster().reactive().transactions().run(ctx -> rxRepo.withCollection(cName).delete(person).then());
 		result.block();
 		Person pFound = cbTmpl.findById(Person.class).inCollection(cName).one(person.id());
 		assertNull(pFound, "Should not have found " + pFound);
@@ -202,12 +188,8 @@ public class SDKReactiveTransactionsPersonIntegrationTests extends JavaIntegrati
 	@Test
 	public void deletePersonCBTransactionsRxRepoFail() {
 		Person person = repo.withCollection(cName).save(WalterWhite);
-		Mono<TransactionResult> result = couchbaseClientFactory.getCluster().reactive().transactions().run(ctx -> { // get
-																																																								// the
-																																																								// ctx
-			return rxRepo.withCollection(cName).findById(person.id())
-					.flatMap(pp -> rxRepo.withCollection(cName).delete(pp).then(rxRepo.withCollection(cName).delete(pp))).then();
-		});
+		Mono<TransactionResult> result = couchbaseClientFactory.getCluster().reactive().transactions().run(ctx -> rxRepo.withCollection(cName).findById(person.id())
+					.flatMap(pp -> rxRepo.withCollection(cName).delete(pp).then(rxRepo.withCollection(cName).delete(pp))).then());
 		assertThrowsWithCause(result::block, TransactionFailedException.class, DataRetrievalFailureException.class);
 		Person pFound = cbTmpl.findById(Person.class).inCollection(cName).one(person.id());
 		assertEquals(pFound, person, "Should have found " + person + " instead of " + pFound);
@@ -218,13 +200,11 @@ public class SDKReactiveTransactionsPersonIntegrationTests extends JavaIntegrati
 		Person person = cbTmpl.insertById(Person.class).inScope(sName).inCollection(cName).one(WalterWhite);
 		List<Object> docs = new LinkedList<>();
 		Query q = Query.query(QueryCriteria.where("meta().id").eq(person.getId()));
-		Mono<TransactionResult> result = couchbaseClientFactory.getCluster().reactive().transactions().run(ctx -> {
-			return rxCBTmpl.findByQuery(Person.class).withConsistency(REQUEST_PLUS).inScope(sName).inCollection(cName)
+		Mono<TransactionResult> result = couchbaseClientFactory.getCluster().reactive().transactions().run(ctx -> rxCBTmpl.findByQuery(Person.class).withConsistency(REQUEST_PLUS).inScope(sName).inCollection(cName)
 					.matching(q).one().doOnSuccess(doc -> {
 						System.err.println("doc: " + doc);
 						docs.add(doc);
-					});
-		});
+					}));
 		result.block();
 		assertFalse(docs.isEmpty(), "Should have found " + person);
 		for (Object o : docs) {
@@ -238,7 +218,7 @@ public class SDKReactiveTransactionsPersonIntegrationTests extends JavaIntegrati
 		Mono<TransactionResult> result = couchbaseClientFactory.getCluster().reactive().transactions()
 				.run(ctx -> rxCBTmpl.insertById(Person.class).inScope(sName).inCollection(cName).one(person)
 						.<Person> flatMap(it -> Mono.error(new SimulateFailureException())));
-		assertThrowsWithCause(() -> result.block(), TransactionFailedException.class, SimulateFailureException.class);
+		assertThrowsWithCause(result::block, TransactionFailedException.class, SimulateFailureException.class);
 		Person pFound = cbTmpl.findById(Person.class).inCollection(cName).one(person.id());
 		assertNull(pFound, "Should not have found " + pFound);
 	}
@@ -251,7 +231,7 @@ public class SDKReactiveTransactionsPersonIntegrationTests extends JavaIntegrati
 				.flatMap(pFound -> rxCBTmpl.replaceById(Person.class).inScope(sName).inCollection(cName)
 						.one(pFound.withFirstName("Walt")))
 				.<Person> flatMap(it -> Mono.error(new SimulateFailureException())));
-		assertThrowsWithCause(() -> result.block(), TransactionFailedException.class, SimulateFailureException.class);
+		assertThrowsWithCause(result::block, TransactionFailedException.class, SimulateFailureException.class);
 		Person pFound = cbTmpl.findById(Person.class).inScope(sName).inCollection(cName).one(person.id());
 		assertEquals(person, pFound, "Should have found " + person + " instead of " + pFound);
 	}
@@ -262,7 +242,7 @@ public class SDKReactiveTransactionsPersonIntegrationTests extends JavaIntegrati
 		List<Object> docs = new LinkedList<>();
 		Query q = Query.query(QueryCriteria.where("meta().id").eq(person.getId()));
 		Mono<TransactionResult> result = couchbaseClientFactory.getCluster().reactive().transactions().run(ctx -> rxCBTmpl
-				.findByQuery(Person.class).inScope(sName).inCollection(cName).matching(q).one().doOnSuccess(r -> docs.add(r)));
+				.findByQuery(Person.class).inScope(sName).inCollection(cName).matching(q).one().doOnSuccess(docs::add));
 		result.block();
 		assertFalse(docs.isEmpty(), "Should have found " + person);
 		for (Object o : docs) {

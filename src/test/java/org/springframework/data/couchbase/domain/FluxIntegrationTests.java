@@ -115,7 +115,7 @@ public class FluxIntegrationTests extends JavaIntegrationTests {
 		System.out.println("\n******** Using concatMap() *********");
 		ParallelFlux<GetResult> concat = Flux.fromIterable(keyList).parallel(2).runOn(Schedulers.parallel())
 				.concatMap(item -> cbGet(item)
-						/* rCollection.get(item) */.doOnSubscribe((x) -> System.out.println(" +" + rCat.incrementAndGet()))
+						/* rCollection.get(item) */.doOnSubscribe(x -> System.out.println(" +" + rCat.incrementAndGet()))
 						.doOnTerminate(() -> System.out.println(" -" + rCat.decrementAndGet())));
 		System.out.println(concat.sequential().collectList().block());
 	}
@@ -135,7 +135,7 @@ public class FluxIntegrationTests extends JavaIntegrationTests {
 			listOfLists.add(list);
 		}
 		Flux<Object> af = Flux.fromIterable(listOfLists).concatMap(catalogToStore -> Flux.fromIterable(catalogToStore)
-				.parallel(4).runOn(Schedulers.parallel()).concatMap((entity) -> reactiveAirportRepository.save(entity)));
+				.parallel(4).runOn(Schedulers.parallel()).concatMap(reactiveAirportRepository::save));
 		List<Object> saved = af.collectList().block();
 		System.out.println("results.size() : " + saved.size());
 
@@ -163,11 +163,11 @@ public class FluxIntegrationTests extends JavaIntegrationTests {
 		for (int i = 0; i < 5; i++) {
 			list.add(a.withId(UUID.randomUUID().toString()));
 		}
-		Flux<Object> af = Flux.fromIterable(list).concatMap((entity) -> reactiveAirportRepository.save(entity));
+		Flux<Object> af = Flux.fromIterable(list).concatMap(reactiveAirportRepository::save);
 		List<Object> saved = af.collectList().block();
 		System.out.println("results.size() : " + saved.size());
 		Flux<Pair<String, Mono<Airport>>> pairFlux = Flux.fromIterable(list)
-				.map((airport) -> Pair.of(airport.getId(), reactiveAirportRepository.findById(airport.getId())));
+				.map(airport -> Pair.of(airport.getId(), reactiveAirportRepository.findById(airport.getId())));
 		List<Pair<String, Mono<Airport>>> airportPairs = pairFlux.collectList().block();
 		for (Pair<String, Mono<Airport>> airportPair : airportPairs) {
 			System.out.println("id: " + airportPair.getFirst() + " airport: " + airportPair.getSecond().block());
@@ -180,7 +180,7 @@ public class FluxIntegrationTests extends JavaIntegrationTests {
 		System.out.println("Start flatMapCB");
 		ParallelFlux<GetResult> concat = Flux.fromIterable(keyList).parallel(2).runOn(Schedulers.parallel())
 				.flatMap(item -> cbGet(item) /* rCollection.get(item) */
-						.doOnSubscribe((x) -> System.out.println(" +" + rCat.incrementAndGet()))
+						.doOnSubscribe(x -> System.out.println(" +" + rCat.incrementAndGet()))
 						.doOnTerminate(() -> System.out.println(" -" + rCat.decrementAndGet())));
 		System.out.println(concat.sequential().collectList().block());
 	}
@@ -192,7 +192,6 @@ public class FluxIntegrationTests extends JavaIntegrationTests {
 		ParallelFlux<GetResult> concat = Flux.fromIterable(keyList).parallel(2).runOn(Schedulers.parallel())
 				.flatMap(item -> Flux.just(cbGetSync(item) /* collection.get(item) */));
 		System.out.println(concat.sequential().collectList().block());
-		;
 	}
 
 	@Test
@@ -200,16 +199,15 @@ public class FluxIntegrationTests extends JavaIntegrationTests {
 		System.out.println("Start flatMapCB2");
 		System.out.println("\n******** Using flatMap() *********");
 		ParallelFlux<GetResult> flat = Flux.fromIterable(keyList).parallel(1).runOn(Schedulers.parallel())
-				.flatMap(item -> rCollection.get(item).doOnSubscribe((x) -> System.out.println(" +" + rCat.incrementAndGet()))
+				.flatMap(item -> rCollection.get(item).doOnSubscribe(x -> System.out.println(" +" + rCat.incrementAndGet()))
 						.doOnTerminate(() -> System.out.println(" -" + rCat.getAndDecrement())));
 		System.out.println(flat.sequential().collectList().block());
 		System.out.println("Start concatMapCB");
 		System.out.println("\n******** Using concatMap() *********");
 		ParallelFlux<GetResult> concat = Flux.fromIterable(keyList).parallel(2).runOn(Schedulers.parallel())
-				.concatMap(item -> cbGet(item).doOnSubscribe((x) -> System.out.println(" +" + rCat.incrementAndGet()))
+				.concatMap(item -> cbGet(item).doOnSubscribe(x -> System.out.println(" +" + rCat.incrementAndGet()))
 						.doOnTerminate(() -> System.out.println(" -" + rCat.getAndDecrement())));
 		System.out.println(concat.sequential().collectList().block());
-		;
 	}
 
 	static Random r = new Random();
@@ -230,15 +228,14 @@ public class FluxIntegrationTests extends JavaIntegrationTests {
 
 	GetResult cbGetSync(String id) {
 		// System.out.println(id + " +" + rCat.incrementAndGet());
-		GetResult result = collection.get(id);
-		// System.out.println(id + " -" + rCat.getAndDecrement());
-		return result;
+		return collection.get(id);
 	}
 
 	static String tab(int len) {
 		StringBuilder sb = new StringBuilder(len);
-		for (int i = 0; i < len; i++)
+		for (int i = 0; i < len; i++) {
 			sb.append(" ");
+		}
 		return sb.toString();
 	}
 

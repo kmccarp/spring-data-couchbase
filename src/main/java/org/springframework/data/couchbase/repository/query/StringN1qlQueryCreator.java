@@ -133,20 +133,18 @@ public class StringN1qlQueryCreator extends AbstractQueryCreator<Query, QueryCri
 	@Override
 	protected Query complete(QueryCriteria criteria, Sort sort) {
 		// everything we need in the StringQuery such that we can doParse() later when we have the scope and collection
-		Query q = new StringQuery(queryMethod, queryString, evaluationContextProvider, accessor, spelExpressionParser)
+		return new StringQuery(queryMethod, queryString, evaluationContextProvider, accessor, spelExpressionParser)
 				.with(sort);
-		return q;
 	}
 
 	private QueryCriteria from(final Part part, final CouchbasePersistentProperty property, final QueryCriteria criteria,
 			final Iterator<Object> parameters) {
 
 		final Part.Type type = part.getType();
-		switch (type) {
-			case SIMPLE_PROPERTY:
-				return criteria; // this will be the dummy from PartTree
-			default:
-				throw new IllegalArgumentException("Unsupported keyword!");
+		if (type == Part.Type.SIMPLE_PROPERTY) {
+			return criteria;
+		} else {
+			throw new IllegalArgumentException("Unsupported keyword!");
 		}
 	}
 

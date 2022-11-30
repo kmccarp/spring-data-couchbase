@@ -53,7 +53,7 @@ public final class DateConverters {
 	 * @return the list of converters to register.
 	 */
 	public static Collection<Converter<?, ?>> getConvertersToRegister() {
-		List<Converter<?, ?>> converters = new ArrayList<Converter<?, ?>>();
+		List<Converter<?, ?>> converters = new ArrayList<>();
 
 		boolean useISOStringConverterForDate = Boolean
 				.parseBoolean(System.getProperty("org.springframework.data.couchbase.useISOStringConverterForDate", "false"));

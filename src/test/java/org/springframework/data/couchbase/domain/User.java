@@ -40,6 +40,8 @@ import org.springframework.data.couchbase.core.mapping.Document;
 @TypeAlias(AbstractingTypeMapper.Type.ABSTRACTUSER)
 public class User extends AbstractUser implements Serializable {
 
+	private static final long serialVersionUID = 1;
+
 	@PersistenceConstructor
 	public User(final String id, final String firstname, final String lastname) {
 		this.id = id;

@@ -90,11 +90,8 @@ public class ReactiveCouchbaseQueryMethod extends CouchbaseQueryMethod {
 		}
 
 		this.method = method;
-		this.isCollectionQueryCouchbase = Lazy.of(() -> {
-			boolean result = !(isPageQuery() || isSliceQuery())
-					&& ReactiveWrappers.isMultiValueType(metadata.getReturnType(method).getType());
-			return result;
-		});
+		this.isCollectionQueryCouchbase = Lazy.of(() -> !(isPageQuery() || isSliceQuery())
+					&& ReactiveWrappers.isMultiValueType(metadata.getReturnType(method).getType()));
 	}
 
 	/*

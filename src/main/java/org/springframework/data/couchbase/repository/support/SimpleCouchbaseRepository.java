@@ -77,7 +77,7 @@ public class SimpleCouchbaseRepository<T, ID> extends CouchbaseRepositoryBase<T,
 	@Override
 	public <S extends T> Iterable<S> saveAll(Iterable<S> entities) {
 		Assert.notNull(entities, "The given Iterable of entities must not be null!");
-		return Streamable.of(entities).stream().map((e) -> save(e)).collect(StreamUtils.toUnmodifiableList());
+		return Streamable.of(entities).stream().map(this::save).collect(StreamUtils.toUnmodifiableList());
 	}
 
 	@Override

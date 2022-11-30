@@ -53,9 +53,9 @@ abstract class TestCluster implements ExtensionContext.Store.CloseableResource {
 
 		// if (clusterType.equals("containerized")) {
 		// return new ContainerizedTestCluster(properties);
-		if (clusterType.equals("mocked")) {
+		if ("mocked".equals(clusterType)) {
 			return new MockTestCluster(properties);
-		} else if (clusterType.equals("unmanaged")) {
+		} else if ("unmanaged".equals(clusterType)) {
 			return new UnmanagedTestCluster(properties);
 		} else {
 			throw new IllegalStateException("Unsupported test cluster type: " + clusterType);
@@ -202,16 +202,16 @@ abstract class TestCluster implements ExtensionContext.Store.CloseableResource {
 		for (Map<String, Object> node : ext) {
 			Map<String, Integer> services = (Map<String, Integer>) node.get("services");
 			for (String name : services.keySet()) {
-				if (name.equals("n1ql") || name.equals("n1qlSSL")) {
+				if ("n1ql".equals(name) || "n1qlSSL".equals(name)) {
 					capabilities.add(Capabilities.QUERY);
 				}
-				if (name.equals("cbas") || name.equals("cbasSSL")) {
+				if ("cbas".equals(name) || "cbasSSL".equals(name)) {
 					capabilities.add(Capabilities.ANALYTICS);
 				}
-				if (name.equals("fts") || name.equals("ftsSSL")) {
+				if ("fts".equals(name) || "ftsSSL".equals(name)) {
 					capabilities.add(Capabilities.SEARCH);
 				}
-				if (name.equals("capi") || name.equals("capiSSL")) {
+				if ("capi".equals(name) || "capiSSL".equals(name)) {
 					capabilities.add(Capabilities.VIEWS);
 				}
 			}

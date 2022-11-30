@@ -41,8 +41,9 @@ public class GeoUtils {
 	 * @throws NullPointerException if any of the origin and distance are null
 	 */
 	public static double[] getBoundingBoxForNear(Point origin, Distance distance) {
-		if (origin == null || distance == null)
+		if (origin == null || distance == null) {
 			throw new NullPointerException("Origin and distance required");
+		}
 
 		// since maxDistance COULD be negative, we have to make sure we have correct min/max
 		double maxDistance = Math.abs(distance.getNormalizedValue());

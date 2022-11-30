@@ -223,7 +223,7 @@ class CouchbaseTemplateKeyValueIntegrationTests extends JavaIntegrationTests {
 			User returned = null;
 
 			// occasionally gives "reactor.core.Exceptions$OverflowException: Could not emit value due to lack of requests"
-			for (int i = 1; i != 5; i++) {
+			for (int i = 1; i < 5; i++) {
 				try {
 					returned = (User) operator.one(user);
 					break;
@@ -381,7 +381,7 @@ class CouchbaseTemplateKeyValueIntegrationTests extends JavaIntegrationTests {
 		User inserted = null;
 
 		// occasionally gives "reactor.core.Exceptions$OverflowException: Could not emit value due to lack of requests"
-		for (int i = 1; i != 5; i++) {
+		for (int i = 1; i < 5; i++) {
 			try {
 				inserted = couchbaseTemplate.insertById(User.class).withDurability(PersistTo.ACTIVE, ReplicateTo.NONE)
 						.one(user);

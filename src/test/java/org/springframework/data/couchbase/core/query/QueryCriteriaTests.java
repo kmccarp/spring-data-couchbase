@@ -260,13 +260,13 @@ class QueryCriteriaTests {
 
 	@Test
 	void testTrue() {
-		QueryCriteria c = where(i("name")).TRUE();
+		QueryCriteria c = where(i("name")).tRUE();
 		assertEquals("`name`", c.export());
 	}
 
 	@Test
 	void testFalse() {
-		QueryCriteria c = where(i("name")).FALSE();
+		QueryCriteria c = where(i("name")).fALSE();
 		assertEquals("not(`name`)", c.export());
 	}
 
@@ -304,9 +304,9 @@ class QueryCriteriaTests {
 					sb.append(",");
 				}
 				first = false;
-				if (e instanceof Number)
+				if (e instanceof Number) {
 					sb.append(e);
-				else {
+				} else {
 					sb.append("\"");
 					sb.append(e);
 					sb.append("\"");

@@ -81,7 +81,7 @@ public class Person extends AbstractEntity implements Persistable<Object> {
 	static String optional(String name, Optional<String> obj) {
 		if (obj != null) {
 			if (obj.isPresent()) {
-				return ("  " + name + ": '" + obj.get() + "'");
+				return "  " + name + ": '" + obj.get() + "'";
 			} else {
 				return "  " + name + ": null";
 			}
@@ -94,7 +94,7 @@ public class Person extends AbstractEntity implements Persistable<Object> {
 	}
 
 	public void setFirstname(String firstname) {
-		this.firstname = firstname == null ? null : (Optional.ofNullable(firstname.equals("") ? null : firstname));
+		this.firstname = firstname == null ? null : (Optional.ofNullable("".equals(firstname) ? null : firstname));
 	}
 
 	public void setFirstname(Optional<String> firstname) {
@@ -106,7 +106,7 @@ public class Person extends AbstractEntity implements Persistable<Object> {
 	}
 
 	public void setLastname(String lastname) {
-		this.lastname = lastname == null ? null : (Optional.ofNullable(lastname.equals("") ? null : lastname));
+		this.lastname = lastname == null ? null : (Optional.ofNullable("".equals(lastname) ? null : lastname));
 	}
 
 	public void setLastname(Optional lastname) {
@@ -147,8 +147,9 @@ public class Person extends AbstractEntity implements Persistable<Object> {
 		sb.append("  id : " + getId());
 		sb.append(optional(", firstname", firstname));
 		sb.append(optional(", lastname", lastname));
-		if (middlename != null)
+		if (middlename != null) {
 			sb.append(", middlename : '" + middlename + "'");
+		}
 		sb.append(", version : " + version);
 		if (creator != null) {
 			sb.append(", creator : " + creator);

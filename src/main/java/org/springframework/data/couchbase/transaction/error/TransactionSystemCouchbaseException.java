@@ -27,7 +27,7 @@ import com.couchbase.client.java.transactions.error.TransactionFailedException;
  *
  * @author Graham Pople
  */
-abstract public class TransactionSystemCouchbaseException extends TransactionSystemException {
+public abstract class TransactionSystemCouchbaseException extends TransactionSystemException {
 	private final TransactionFailedException internal;
 
 	public TransactionSystemCouchbaseException(TransactionFailedException ex) {

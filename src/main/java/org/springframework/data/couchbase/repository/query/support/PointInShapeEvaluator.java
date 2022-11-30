@@ -94,7 +94,7 @@ public abstract class PointInShapeEvaluator {
 	 */
 	public <T> List<T> removeFalsePositives(Collection<? extends T> boundingBoxResults,
 			Converter<T, Point> locationExtractor, Polygon polygon) {
-		ArrayList<T> result = new ArrayList<T>(boundingBoxResults.size());
+		ArrayList<T> result = new ArrayList<>(boundingBoxResults.size());
 		for (T boxResult : boundingBoxResults) {
 			Point p = locationExtractor.convert(boxResult);
 			if (pointInPolygon(p, polygon)) {
@@ -119,7 +119,7 @@ public abstract class PointInShapeEvaluator {
 	 */
 	public <T> List<T> removeFalsePositives(Collection<? extends T> boundingBoxResults,
 			Converter<T, Point> locationExtractor, Circle circle) {
-		ArrayList<T> result = new ArrayList<T>(boundingBoxResults.size());
+		ArrayList<T> result = new ArrayList<>(boundingBoxResults.size());
 		for (T boxResult : boundingBoxResults) {
 			Point p = locationExtractor.convert(boxResult);
 			if (pointInCircle(p, circle)) {
@@ -144,7 +144,7 @@ public abstract class PointInShapeEvaluator {
 	 */
 	public <T> List<T> removeFalsePositives(Collection<? extends T> boundingBoxResults,
 			Converter<T, Point> locationExtractor, Point... polygon) {
-		ArrayList<T> result = new ArrayList<T>(boundingBoxResults.size());
+		ArrayList<T> result = new ArrayList<>(boundingBoxResults.size());
 		for (T boxResult : boundingBoxResults) {
 			Point p = locationExtractor.convert(boxResult);
 			if (pointInPolygon(p, polygon)) {
@@ -170,7 +170,7 @@ public abstract class PointInShapeEvaluator {
 	 */
 	public <T> List<T> removeFalsePositives(Collection<? extends T> boundingBoxResults,
 			Converter<T, Point> locationExtractor, Point center, Distance radius) {
-		ArrayList<T> result = new ArrayList<T>(boundingBoxResults.size());
+		ArrayList<T> result = new ArrayList<>(boundingBoxResults.size());
 		for (T boxResult : boundingBoxResults) {
 			Point p = locationExtractor.convert(boxResult);
 			if (pointInCircle(p, center, radius)) {

@@ -28,6 +28,7 @@ import org.springframework.data.couchbase.core.mapping.Document;
 
 @Document(expiryExpression = "${myExpiryExpression}", expiryUnit = TimeUnit.SECONDS)
 public class UserAnnotated2 extends User {
+	private static final long serialVersionUID = 1;
 	static {
 		System.setProperty("myExpiryExpression", "2");
 	}

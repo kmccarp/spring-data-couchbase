@@ -17,7 +17,8 @@
 package org.springframework.data.couchbase.repository.query.support;
 
 import static org.springframework.data.couchbase.core.query.N1QLExpression.*;
-import static org.springframework.data.couchbase.core.support.TemplateUtils.*;
+import static org.springframework.data.couchbase.core.support.TemplateUtils.SELECT_CAS;
+import static org.springframework.data.couchbase.core.support.TemplateUtils.SELECT_ID;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,12 +58,7 @@ public class N1qlUtils {
 	 * A converter that can be used to extract the {@link CouchbasePersistentProperty#getFieldName() fieldName}, eg. when
 	 * one wants a path from {@link PersistentPropertyPath#toDotPath(Converter)} made of escaped field names.
 	 */
-	public static final Converter<? super CouchbasePersistentProperty, String> FIELD_NAME_ESCAPED = new Converter<CouchbasePersistentProperty, String>() {
-		@Override
-		public String convert(CouchbasePersistentProperty source) {
-			return "`" + source.getFieldName() + "`";
-		}
-	};
+	public static final Converter<? super CouchbasePersistentProperty, String> FIELD_NAME_ESCAPED = source -> "`" + source.getFieldName() + "`";
 
 	/**
 	 * Escape the given bucketName and produce an {@link N1QLExpression}.
@@ -185,9 +181,8 @@ public class N1qlUtils {
 	 */
 	public static PersistentPropertyPath<CouchbasePersistentProperty> getPathWithAlternativeFieldNames(
 			CouchbaseConverter converter, PropertyPath property) {
-		PersistentPropertyPath<CouchbasePersistentProperty> path = converter.getMappingContext()
+		return converter.getMappingContext()
 				.getPersistentPropertyPath(property);
-		return path;
 	}
 
 	/**

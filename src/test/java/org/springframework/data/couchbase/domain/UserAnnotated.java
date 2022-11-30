@@ -36,6 +36,8 @@ import org.springframework.data.couchbase.core.mapping.Document;
 @Document(expiry = 1)
 public class UserAnnotated extends User {
 
+	private static final long serialVersionUID = 1;
+
 	public UserAnnotated(String id, String firstname, String lastname) {
 		super(id, firstname, lastname);
 	}

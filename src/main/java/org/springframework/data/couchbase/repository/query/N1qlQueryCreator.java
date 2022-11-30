@@ -121,8 +121,7 @@ public class N1qlQueryCreator extends AbstractQueryCreator<Query, QueryCriteria>
 
 	@Override
 	protected Query complete(QueryCriteria criteria, Sort sort) {
-		Query q = (criteria == null ? new Query() : new Query().addCriteria(criteria)).with(sort);
-		return q;
+		return (criteria == null ? new Query() : new Query().addCriteria(criteria)).with(sort);
 	}
 
 	private QueryCriteria from(final Part part, final CouchbasePersistentProperty property, final QueryCriteria criteria,
@@ -198,9 +197,9 @@ public class N1qlQueryCreator extends AbstractQueryCreator<Query, QueryCriteria>
 			case NOT_IN:
 				return criteria.notIn(ignoreCase, new Object[] { parameters.next() });
 			case TRUE:
-				return criteria.TRUE();
+				return criteria.tRUE();
 			case FALSE:
-				return criteria.FALSE();
+				return criteria.fALSE();
 			default:
 				throw new IllegalArgumentException("Unsupported keyword!");
 		}

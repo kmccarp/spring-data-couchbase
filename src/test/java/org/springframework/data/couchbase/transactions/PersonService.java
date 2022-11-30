@@ -29,6 +29,7 @@ import org.springframework.data.couchbase.config.BeanNames;
 import org.springframework.data.couchbase.core.CouchbaseOperations;
 import org.springframework.data.couchbase.core.ReactiveCouchbaseOperations;
 import org.springframework.data.couchbase.domain.Person;
+import org.springframework.data.couchbase.util.JavaIntegrationTests;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -146,7 +147,7 @@ class PersonService {
 	public Mono<Person> declarativeFindReplacePersonReactive(Person person, AtomicInteger tryCount) {
 		assertInAnnotationTransaction(true);
 		return reactivePersonOperations.findById(Person.class).one(person.id())
-				.map((p) -> ReplaceLoopThread.updateOutOfTransaction(personOperations, p, tryCount.incrementAndGet()))
+				.map(p -> ReplaceLoopThread.updateOutOfTransaction(personOperations, p, tryCount.incrementAndGet()))
 				.flatMap(p -> reactivePersonOperations.replaceById(Person.class).one(p.withFirstName(person.getFirstname())));
 	}
 
@@ -172,7 +173,7 @@ class PersonService {
 	@Transactional
 	public Mono<Person> declarativeSavePersonErrorsReactive(Person person) {
 		assertInAnnotationTransaction(true);
-		return reactivePersonOperations.insertById(Person.class).one(person).map((pp) -> throwSimulateFailureException(pp));
+		return reactivePersonOperations.insertById(Person.class).one(person).map(JavaIntegrationTests::throwSimulateFailureException);
 
 	}
 

@@ -75,7 +75,7 @@ class ConverterRegistration {
 	 * @return
 	 */
 	public boolean isWriting() {
-		return writing == true || (!reading && isSimpleTargetType());
+		return writing || (!reading && isSimpleTargetType());
 	}
 
 	/**
@@ -84,7 +84,7 @@ class ConverterRegistration {
 	 * @return
 	 */
 	public boolean isReading() {
-		return reading == true || (!writing && isSimpleSourceType());
+		return reading || (!writing && isSimpleSourceType());
 	}
 
 	/**

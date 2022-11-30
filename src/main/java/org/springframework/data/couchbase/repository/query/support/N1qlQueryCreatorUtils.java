@@ -184,7 +184,7 @@ public class N1qlQueryCreatorUtils {
 			boolean anySuffix) {
 		Object next = parameterValues.next();
 		if (next == null) {
-			return N1QLExpression.NULL();
+			return N1QLExpression.nULL();
 		}
 
 		N1QLExpression converted;

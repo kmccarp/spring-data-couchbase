@@ -45,7 +45,7 @@ public class CouchbaseList implements CouchbaseStorable {
 	 * Create a new (empty) list.
 	 */
 	public CouchbaseList() {
-		this(new ArrayList<Object>());
+		this(new ArrayList<>());
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class CouchbaseList implements CouchbaseStorable {
 	 * @param simpleTypeHolder context instance.
 	 */
 	public CouchbaseList(final SimpleTypeHolder simpleTypeHolder) {
-		this(new ArrayList<Object>(), simpleTypeHolder);
+		this(new ArrayList<>(), simpleTypeHolder);
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class CouchbaseList implements CouchbaseStorable {
 	public CouchbaseList(final List<Object> initialPayload, final SimpleTypeHolder simpleTypeHolder) {
 		this.payload = initialPayload;
 		if (simpleTypeHolder != null) {
-			Set<Class<?>> additionalTypes = new HashSet<Class<?>>();
+			Set<Class<?>> additionalTypes = new HashSet<>();
 			additionalTypes.add(CouchbaseDocument.class);
 			additionalTypes.add(CouchbaseList.class);
 			this.simpleTypeHolder = new SimpleTypeHolder(additionalTypes, simpleTypeHolder);
@@ -149,7 +149,7 @@ public class CouchbaseList implements CouchbaseStorable {
 	 * @return
 	 */
 	public final List<Object> export() {
-		List<Object> toExport = new ArrayList<Object>(payload);
+		List<Object> toExport = new ArrayList<>(payload);
 
 		int elem = 0;
 		for (Object entry : payload) {

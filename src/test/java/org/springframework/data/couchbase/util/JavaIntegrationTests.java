@@ -95,8 +95,8 @@ import com.couchbase.client.java.search.result.SearchResult;
 public class JavaIntegrationTests extends ClusterAwareIntegrationTests {
 
 	// Autowired annotation is not supported on static fields
-	static public CouchbaseTemplate couchbaseTemplate;
-	static public ReactiveCouchbaseTemplate reactiveCouchbaseTemplate;
+	public static CouchbaseTemplate couchbaseTemplate;
+	public static ReactiveCouchbaseTemplate reactiveCouchbaseTemplate;
 
 	@BeforeAll
 	public static void beforeAll() {
@@ -290,9 +290,9 @@ public class JavaIntegrationTests extends ClusterAwareIntegrationTests {
 		String keyspace = "default:`" + bucketName + "`.`" + scopeName + "`.`" + collectionName + "`";
 		String statement = "CREATE PRIMARY INDEX ";
 		if (indexName != null) {
-			statement += (indexName) + " ";
+			statement += indexName + " ";
 		}
-		statement += "ON " + (keyspace); // do not quote, this might be "default:bucketName.scopeName.collectionName"
+		statement += "ON " + keyspace; // do not quote, this might be "default:bucketName.scopeName.collectionName"
 
 		return exec(cluster, false, statement, builtOpts.with(), builtOpts).exceptionally(t -> {
 			if (builtOpts.ignoreIfExists() && hasCause(t, IndexExistsException.class)) {
@@ -331,7 +331,7 @@ public class JavaIntegrationTests extends ClusterAwareIntegrationTests {
 
 	private static RuntimeException translateException(Throwable t) {
 		if (t instanceof QueryException) {
-			final QueryException e = ((QueryException) t);
+			final QueryException e = (QueryException) t;
 
 			for (Map.Entry<Predicate<QueryException>, Function<QueryException, ? extends QueryException>> entry : errorMessageMap
 					.entrySet()) {

@@ -97,7 +97,7 @@ public class QueryCriteria implements QueryCriteriaDefinition {
 		criteriaChain.remove(criteria); // we replaced it with the clone
 		criteriaChain = new LinkedList<>();
 		criteriaChain.add(this);
-		key = N1QLExpression.WRAPPER();
+		key = N1QLExpression.wRAPPER();
 		operator = "";
 		value = new Object[] { qc };
 		chainOperator = null;
@@ -111,7 +111,7 @@ public class QueryCriteria implements QueryCriteriaDefinition {
 		this.criteriaChain.remove(this); // we replaced it with the clone
 		this.criteriaChain = new LinkedList<>();
 		this.criteriaChain.add(this);
-		this.key = N1QLExpression.WRAPPER();
+		this.key = N1QLExpression.wRAPPER();
 		this.operator = "";
 		this.format = null;
 		this.value = new Object[] { qc };
@@ -130,7 +130,7 @@ public class QueryCriteria implements QueryCriteriaDefinition {
 		criteria.criteriaChain.remove(criteria); // we replaced it with the clone
 		criteria.criteriaChain = new LinkedList<>();
 		criteria.criteriaChain.add(criteria);
-		criteria.key = N1QLExpression.WRAPPER();
+		criteria.key = N1QLExpression.wRAPPER();
 		criteria.operator = "";
 		criteria.format = null;
 		criteria.value = new Object[] { qc };
@@ -466,10 +466,10 @@ public class QueryCriteria implements QueryCriteriaDefinition {
 				if (o[0] instanceof Object[]) {
 					value[0] = o[0];
 				} else if (o[0] instanceof JsonArray) {
-					JsonArray ja = ((JsonArray) o[0]);
+					JsonArray ja = (JsonArray) o[0];
 					value[0] = ja.toList().toArray();
 				} else if (o[0] instanceof List) {
-					List l = ((List) o[0]);
+					List l = (List) o[0];
 					value[0] = l.toArray();
 				}
 			} else {
@@ -496,14 +496,14 @@ public class QueryCriteria implements QueryCriteriaDefinition {
 		return in(ignoreCase, o).negate();
 	}
 
-	public QueryCriteria TRUE() { // true/false are reserved, use TRUE/FALSE
+	public QueryCriteria tRUE() { // true/false are reserved, use TRUE/FALSE
 		value = null;
 		operator = null;
 		format = "%1$s"; // field = 1$, operator = 2$, value=$3, $4, ...
 		return this;
 	}
 
-	public QueryCriteria FALSE() {
+	public QueryCriteria fALSE() {
 		value = null;
 		operator = "NOT";
 		format = "not(%1$s)"; // field = 1$, operator = 2$, value=$3, $4, ...

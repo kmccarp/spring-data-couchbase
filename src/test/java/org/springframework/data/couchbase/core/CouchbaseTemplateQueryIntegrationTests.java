@@ -290,7 +290,7 @@ class CouchbaseTemplateQueryIntegrationTests extends JavaIntegrationTests {
 
 		} finally {
 			couchbaseTemplate.removeById()
-					.all(Arrays.stream(iatas).map((iata) -> "airports::" + iata).collect(Collectors.toSet()));
+					.all(Arrays.stream(iatas).map(iata -> "airports::" + iata).collect(Collectors.toSet()));
 		}
 	}
 
@@ -331,7 +331,7 @@ class CouchbaseTemplateQueryIntegrationTests extends JavaIntegrationTests {
 
 		} finally {
 			reactiveCouchbaseTemplate.removeById()
-					.all(Arrays.stream(iatas).map((iata) -> "airports::" + iata).collect(Collectors.toSet())).collectList()
+					.all(Arrays.stream(iatas).map(iata -> "airports::" + iata).collect(Collectors.toSet())).collectList()
 					.block();
 		}
 	}
@@ -343,7 +343,7 @@ class CouchbaseTemplateQueryIntegrationTests extends JavaIntegrationTests {
 
 		try {
 			couchbaseTemplate.insertById(Airport.class)
-					.all(Arrays.stream(iatas).map((iata) -> new Airport("airports::" + iata, iata, iata.toLowerCase(Locale.ROOT)))
+					.all(Arrays.stream(iatas).map(iata -> new Airport("airports::" + iata, iata, iata.toLowerCase(Locale.ROOT)))
 							.collect(Collectors.toSet()));
 
 			org.springframework.data.couchbase.core.query.Query query = org.springframework.data.couchbase.core.query.Query
@@ -362,7 +362,7 @@ class CouchbaseTemplateQueryIntegrationTests extends JavaIntegrationTests {
 			}
 		} finally {
 			couchbaseTemplate.removeById(Airport.class)
-					.all(Arrays.stream(iatas).map((iata) -> "airports::" + iata).collect(Collectors.toSet()));
+					.all(Arrays.stream(iatas).map(iata -> "airports::" + iata).collect(Collectors.toSet()));
 		}
 	}
 

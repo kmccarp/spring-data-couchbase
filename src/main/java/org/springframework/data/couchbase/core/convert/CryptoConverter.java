@@ -160,28 +160,28 @@ public class CryptoConverter implements
 		Class<?> component = value.getClass().getComponentType();
 		JsonArray jArray;
 		if (Long.TYPE.isAssignableFrom(component)) {
-			jArray = ja_long((long[]) value);
+			jArray = jaLong((long[]) value);
 		} else if (Integer.TYPE.isAssignableFrom(component)) {
-			jArray = ja_int((int[]) value);
+			jArray = jaInt((int[]) value);
 		} else if (Double.TYPE.isAssignableFrom(component)) {
-			jArray = ja_double((double[]) value);
+			jArray = jaDouble((double[]) value);
 		} else if (Float.TYPE.isAssignableFrom(component)) {
-			jArray = ja_float((float[]) value);
+			jArray = jaFloat((float[]) value);
 		} else if (Boolean.TYPE.isAssignableFrom(component)) {
-			jArray = ja_boolean((boolean[]) value);
+			jArray = jaBoolean((boolean[]) value);
 		} else if (Short.TYPE.isAssignableFrom(component)) {
-			jArray = ja_short((short[]) value);
+			jArray = jaShort((short[]) value);
 		} else if (Byte.TYPE.isAssignableFrom(component)) {
-			jArray = ja_byte((byte[]) value);
+			jArray = jaByte((byte[]) value);
 		} else if (Character.TYPE.isAssignableFrom(component)) {
-			jArray = ja_char((char[]) value);
+			jArray = jaChar((char[]) value);
 		} else {
 			throw new RuntimeException("unhandled primitive array: " + component.getName());
 		}
 		return jArray;
 	}
 
-	JsonArray ja_long(long[] array) {
+	JsonArray jaLong(long[] array) {
 		JsonArray ja = JsonArray.ja();
 		for (long t : array) {
 			ja.add(t);
@@ -189,7 +189,7 @@ public class CryptoConverter implements
 		return ja;
 	}
 
-	JsonArray ja_int(int[] array) {
+	JsonArray jaInt(int[] array) {
 		JsonArray ja = JsonArray.ja();
 		for (int t : array) {
 			ja.add(t);
@@ -197,7 +197,7 @@ public class CryptoConverter implements
 		return ja;
 	}
 
-	JsonArray ja_double(double[] array) {
+	JsonArray jaDouble(double[] array) {
 		JsonArray ja = JsonArray.ja();
 		for (double t : array) {
 			ja.add(t);
@@ -205,7 +205,7 @@ public class CryptoConverter implements
 		return ja;
 	}
 
-	JsonArray ja_float(float[] array) {
+	JsonArray jaFloat(float[] array) {
 		JsonArray ja = JsonArray.ja();
 		for (float t : array) {
 			ja.add(t);
@@ -213,7 +213,7 @@ public class CryptoConverter implements
 		return ja;
 	}
 
-	JsonArray ja_boolean(boolean[] array) {
+	JsonArray jaBoolean(boolean[] array) {
 		JsonArray ja = JsonArray.ja();
 		for (boolean t : array) {
 			ja.add(t);
@@ -221,7 +221,7 @@ public class CryptoConverter implements
 		return ja;
 	}
 
-	JsonArray ja_short(short[] array) {
+	JsonArray jaShort(short[] array) {
 		JsonArray ja = JsonArray.ja();
 		for (short t : array) {
 			ja.add(t);
@@ -229,7 +229,7 @@ public class CryptoConverter implements
 		return ja;
 	}
 
-	JsonArray ja_byte(byte[] array) {
+	JsonArray jaByte(byte[] array) {
 		JsonArray ja = JsonArray.ja();
 		for (byte t : array) {
 			ja.add(t);
@@ -237,7 +237,7 @@ public class CryptoConverter implements
 		return ja;
 	}
 
-	JsonArray ja_char(char[] array) {
+	JsonArray jaChar(char[] array) {
 		JsonArray ja = JsonArray.ja();
 		for (char t : array) {
 			ja.add(String.valueOf(t));

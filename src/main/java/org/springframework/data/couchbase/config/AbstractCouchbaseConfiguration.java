@@ -88,7 +88,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public abstract class AbstractCouchbaseConfiguration {
 
 	ObjectMapper mapper;
-	CryptoManager cryptoManager = null;
+	CryptoManager cryptoManager;
 
 	/**
 	 * The connection string which allows the SDK to connect to the cluster.
@@ -398,14 +398,13 @@ public abstract class AbstractCouchbaseConfiguration {
 	 */
 	public CustomConversions customConversions(CryptoManager cryptoManager) {
 		List<GenericConverter> newConverters = new ArrayList();
-		CustomConversions customConversions = CouchbaseCustomConversions.create(configurationAdapter -> {
+		return CouchbaseCustomConversions.create(configurationAdapter -> {
 			SimplePropertyValueConversions valueConversions = new SimplePropertyValueConversions();
 			valueConversions.setConverterFactory(new CouchbasePropertyValueConverterFactory(cryptoManager));
 			valueConversions.setValueConverterRegistry(new PropertyValueConverterRegistrar().buildRegistry());
 			configurationAdapter.setPropertyValueConversions(valueConversions);
 			configurationAdapter.registerConverters(newConverters);
 		});
-		return customConversions;
 	}
 
 	/**

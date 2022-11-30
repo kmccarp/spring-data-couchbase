@@ -33,6 +33,8 @@ import org.springframework.data.couchbase.repository.Scope;
 @Collection("other_collection")
 public class UserCol extends User {
 
+	private static final long serialVersionUID = 1;
+
 	@PersistenceConstructor
 	public UserCol(final String id, final String firstname, final String lastname) {
 		super(id, firstname, lastname);

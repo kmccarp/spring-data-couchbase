@@ -117,10 +117,9 @@ public abstract class AbstractCouchbaseConverter implements CouchbaseConverter, 
 			return null;
 		}
 		if (processValueConverter && conversions.hasValueConverter(prop)) {
-			CouchbaseDocument encrypted = (CouchbaseDocument) conversions.getPropertyValueConversions()
+			return (CouchbaseDocument) conversions.getPropertyValueConversions()
 					.getValueConverter(prop)
 					.write(value, new CouchbaseConversionContext(prop, (MappingCouchbaseConverter) this, accessor));
-			return encrypted;
 		}
 		Class<?> targetClass = this.conversions.getCustomWriteTarget(value.getClass()).orElse(null);
 
@@ -131,12 +130,10 @@ public abstract class AbstractCouchbaseConverter implements CouchbaseConverter, 
 					TypeDescriptor.valueOf(targetClass));
 		}
 
-		Object result = this.conversions.getCustomWriteTarget(prop.getType()) //
+		return this.conversions.getCustomWriteTarget(prop.getType()) //
 				.map(it -> this.conversionService.convert(value, new TypeDescriptor(prop.getField()),
 						TypeDescriptor.valueOf(it))) //
 				.orElseGet(() -> Enum.class.isAssignableFrom(value.getClass()) ? ((Enum<?>) value).name() : value);
-
-		return result;
 
 	}
 

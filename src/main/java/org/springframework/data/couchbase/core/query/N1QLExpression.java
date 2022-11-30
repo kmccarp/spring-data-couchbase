@@ -24,7 +24,7 @@ import java.util.Iterator;
  * @author Michael Nitschinger
  * @author Michael Reiche
  */
-public class N1QLExpression {
+public final class N1QLExpression {
 	private static final N1QLExpression NULL_INSTANCE = new N1QLExpression("NULL");
 	private static final N1QLExpression TRUE_INSTANCE = new N1QLExpression("TRUE");
 	private static final N1QLExpression FALSE_INSTANCE = new N1QLExpression("FALSE");
@@ -74,7 +74,7 @@ public class N1QLExpression {
 	 *
 	 * @return an expression representing TRUE.
 	 */
-	public static N1QLExpression TRUE() {
+	public static N1QLExpression tRUE() {
 		return TRUE_INSTANCE;
 	}
 
@@ -83,7 +83,7 @@ public class N1QLExpression {
 	 *
 	 * @return an expression representing FALSE.
 	 */
-	public static N1QLExpression FALSE() {
+	public static N1QLExpression fALSE() {
 		return FALSE_INSTANCE;
 	}
 
@@ -92,7 +92,7 @@ public class N1QLExpression {
 	 *
 	 * @return an expression representing NULL.
 	 */
-	public static N1QLExpression NULL() {
+	public static N1QLExpression nULL() {
 		return NULL_INSTANCE;
 	}
 
@@ -101,7 +101,7 @@ public class N1QLExpression {
 	 *
 	 * @return an expression representing WRAPPER.
 	 */
-	public static N1QLExpression WRAPPER() {
+	public static N1QLExpression wRAPPER() {
 		return EMPTY_INSTANCE;
 	}
 
@@ -110,7 +110,7 @@ public class N1QLExpression {
 	 *
 	 * @return an expression representing MISSING.
 	 */
-	public static N1QLExpression MISSING() {
+	public static N1QLExpression mISSING() {
 		return MISSING_INSTANCE;
 	}
 
