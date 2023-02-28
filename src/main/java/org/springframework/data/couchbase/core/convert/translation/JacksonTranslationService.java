@@ -53,12 +53,12 @@ public class JacksonTranslationService implements TranslationService, Initializi
 	/**
 	 * Type holder to help easily identify simple types.
 	 */
-	private SimpleTypeHolder simpleTypeHolder = SimpleTypeHolder.DEFAULT;
+	private final SimpleTypeHolder simpleTypeHolder = SimpleTypeHolder.DEFAULT;
 
 	/**
 	 * JSON factory for Jackson.
 	 */
-	private JsonFactory factory = new JsonFactory();
+	private final JsonFactory factory = new JsonFactory();
 
 	/**
 	 * Encode a {@link CouchbaseStorable} to a JSON string.

@@ -52,9 +52,9 @@ public class PersonValue {
 		StringBuilder sb = new StringBuilder();
 		sb.append("PersonValue : {");
 		sb.append(" id : " + getId());
-		sb.append(", version : " + version);
-		sb.append(", firstname : " + firstname);
-		sb.append(", lastname : " + lastname);
+		sb.append(", version : ").append(version);
+		sb.append(", firstname : ").append(firstname);
+		sb.append(", lastname : ").append(lastname);
 		sb.append(" }");
 		return sb.toString();
 	}

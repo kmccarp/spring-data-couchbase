@@ -88,8 +88,8 @@ public class ReactiveCouchbaseRepositoryQueryIntegrationTests extends JavaIntegr
 			List<Airport> all = reactiveAirportRepository.findAll().toStream().collect(Collectors.toList());
 
 			assertFalse(all.isEmpty());
-			assertTrue(all.stream().anyMatch(a -> a.getId().equals("airports::vie")));
-			assertTrue(all.stream().anyMatch(a -> a.getId().equals("airports::jfk")));
+			assertTrue(all.stream().anyMatch(a -> "airports::vie".equals(a.getId())));
+			assertTrue(all.stream().anyMatch(a -> "airports::jfk".equals(a.getId())));
 		} finally {
 			reactiveAirportRepository.delete(vie).block();
 			reactiveAirportRepository.delete(jfk).block();
@@ -109,8 +109,8 @@ public class ReactiveCouchbaseRepositoryQueryIntegrationTests extends JavaIntegr
 			List<String> all = reactiveAirportRepository.findIdByDynamicN1ql("", "").toStream().collect(Collectors.toList());
 			System.out.println(all);
 			assertFalse(all.isEmpty());
-			assertTrue(all.stream().anyMatch(a -> a.equals("airports::vie")));
-			assertTrue(all.stream().anyMatch(a -> a.equals("airports::jfk")));
+			assertTrue(all.stream().anyMatch("airports::vie"::equals));
+			assertTrue(all.stream().anyMatch("airports::jfk"::equals));
 
 		} finally {
 			reactiveAirportRepository.delete(vie).block();
@@ -205,9 +205,7 @@ public class ReactiveCouchbaseRepositoryQueryIntegrationTests extends JavaIntegr
 			int page = 0;
 
 			reactiveAirportRepository.findAllByIataLike("S%", PageRequest.of(page++, 2)).as(StepVerifier::create) //
-					.expectNextMatches(a -> {
-						return iatas.contains(a.getIata());
-					}).expectNextMatches(a -> iatas.contains(a.getIata())).verifyComplete();
+					.expectNextMatches(a -> iatas.contains(a.getIata())).expectNextMatches(a -> iatas.contains(a.getIata())).verifyComplete();
 
 			reactiveAirportRepository.findAllByIataLike("S%", PageRequest.of(page++, 2)).as(StepVerifier::create) //
 					.expectNextMatches(a -> iatas.contains(a.getIata())).verifyComplete();

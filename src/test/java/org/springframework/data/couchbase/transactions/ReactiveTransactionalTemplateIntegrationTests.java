@@ -91,11 +91,7 @@ public class ReactiveTransactionalTemplateIntegrationTests extends JavaIntegrati
 	public void committedInsert() {
 		AtomicInteger tryCount = new AtomicInteger(0);
 
-		personService.doInTransaction(tryCount, (ops) -> {
-			return Mono.defer(() -> {
-				return ops.insertById(Person.class).one(WalterWhite);
-			});
-		}).block();
+		personService.doInTransaction(tryCount, ops -> Mono.defer(() -> ops.insertById(Person.class).one(WalterWhite))).block();
 
 		Person fetched = blocking.findById(Person.class).one(WalterWhite.id());
 		assertEquals(WalterWhite.getFirstname(), fetched.getFirstname());
@@ -108,11 +104,7 @@ public class ReactiveTransactionalTemplateIntegrationTests extends JavaIntegrati
 		AtomicInteger tryCount = new AtomicInteger();
 
 		assertThrowsWithCause(() -> {
-			personService.doInTransaction(tryCount, (ops) -> {
-				return Mono.defer(() -> {
-					return ops.insertById(Person.class).one(WalterWhite).then(Mono.error(new SimulateFailureException()));
-				});
-			}).block();
+			personService.doInTransaction(tryCount, ops -> Mono.defer(() -> ops.insertById(Person.class).one(WalterWhite).then(Mono.error(new SimulateFailureException())))).block();
 		}, TransactionSystemUnambiguousException.class, SimulateFailureException.class);
 
 		Person fetched = blocking.findById(Person.class).one(WalterWhite.id());
@@ -126,11 +118,9 @@ public class ReactiveTransactionalTemplateIntegrationTests extends JavaIntegrati
 		Person person = blocking.insertById(Person.class).one(WalterWhite);
 		AtomicInteger attempts = new AtomicInteger();
 
-		personService.doInTransaction(attempts, ops -> {
-			return ops.findById(Person.class).one(person.id()).flatMap(fetched -> Mono.fromRunnable(() -> {
+		personService.doInTransaction(attempts, ops -> ops.findById(Person.class).one(person.id()).flatMap(fetched -> Mono.fromRunnable(() -> {
 				ReplaceLoopThread.updateOutOfTransaction(blocking, person.withFirstName("ChangedExternally"), attempts.get());
-			}).then(ops.replaceById(Person.class).one(fetched.withFirstName("Changed by transaction"))));
-		}).block();
+			}).then(ops.replaceById(Person.class).one(fetched.withFirstName("Changed by transaction"))))).block();
 
 		Person fetched = blocking.findById(Person.class).one(person.getId().toString());
 		assertEquals("Changed by transaction", fetched.getFirstname());
@@ -141,11 +131,7 @@ public class ReactiveTransactionalTemplateIntegrationTests extends JavaIntegrati
 	public void returnMono() {
 		AtomicInteger tryCount = new AtomicInteger(0);
 
-		Person fromLambda = personService.doInTransactionReturningMono(tryCount, (ops) -> {
-			return Mono.defer(() -> {
-				return ops.insertById(Person.class).one(WalterWhite).log("source");
-			}).log("returnMono test");
-		}).block();
+		Person fromLambda = personService.doInTransactionReturningMono(tryCount, ops -> Mono.defer(() -> ops.insertById(Person.class).one(WalterWhite).log("source")).log("returnMono test")).block();
 
 		assertNotNull(fromLambda);
 		assertEquals(WalterWhite.getFirstname(), fromLambda.getFirstname());
@@ -155,12 +141,8 @@ public class ReactiveTransactionalTemplateIntegrationTests extends JavaIntegrati
 	public void returnFlux() {
 		AtomicInteger tryCount = new AtomicInteger(0);
 
-		List<Integer> fromLambda = personService.doInTransactionReturningFlux(tryCount, (ops) -> {
-			return Flux.defer(() -> {
-				return ops.insertById(Person.class).one(WalterWhite)
-						.thenMany(Flux.fromIterable(Arrays.asList(1, 2, 3)).log("1"));
-			});
-		}).collectList().block();
+		List<Integer> fromLambda = personService.doInTransactionReturningFlux(tryCount, ops -> Flux.defer(() -> ops.insertById(Person.class).one(WalterWhite)
+						.thenMany(Flux.fromIterable(Arrays.asList(1, 2, 3)).log("1")))).collectList().block();
 
 		assertEquals(3, fromLambda.size());
 	}

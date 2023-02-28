@@ -87,9 +87,7 @@ public class CouchbaseTransactionalOptionsIntegrationTests extends JavaIntegrati
 	@DisplayName("@Transactional(isolation = Isolation.ANYTHING_BUT_READ_COMMITTED) will fail")
 	@Test
 	public void unsupportedIsolation() {
-		assertThrowsWithCause(() -> {
-			personService.unsupportedIsolation();
-		}, IllegalArgumentException.class);
+		assertThrowsWithCause(personService::unsupportedIsolation, IllegalArgumentException.class);
 
 	}
 
