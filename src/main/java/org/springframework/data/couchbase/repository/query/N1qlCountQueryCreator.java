@@ -44,7 +44,7 @@ public class N1qlCountQueryCreator extends OldN1qlQueryCreator {
 
 	private static class CountParameterAccessor implements ParameterAccessor {
 
-		private ParameterAccessor delegate;
+		private final ParameterAccessor delegate;
 
 		public CountParameterAccessor(ParameterAccessor delegate) {
 			this.delegate = delegate;
@@ -79,7 +79,7 @@ public class N1qlCountQueryCreator extends OldN1qlQueryCreator {
 
 	private static class CountPageable implements Pageable {
 
-		private Pageable delegate;
+		private final Pageable delegate;
 
 		public CountPageable(Pageable delegate) {
 			this.delegate = delegate;

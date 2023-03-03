@@ -169,7 +169,7 @@ public class CouchbaseRepositoryQueryIntegrationTests extends ClusterAwareIntegr
 			List<Airport> all = new ArrayList<>();
 			airportRepository.findAll().forEach(all::add);
 			assertFalse(all.isEmpty());
-			assertTrue(all.stream().anyMatch(a -> a.getId().equals("airports::vie")));
+			assertTrue(all.stream().anyMatch(a -> "airports::vie".equals(a.getId())));
 		} finally {
 			airportRepository.delete(vie);
 		}
@@ -272,9 +272,9 @@ public class CouchbaseRepositoryQueryIntegrationTests extends ClusterAwareIntegr
 		try {
 			vie = new Airport("airports::vie", "vie", "low5");
 			airportRepository.save(vie);
-			java.util.Collection<String> iatas = new LinkedList<String>();
+			java.util.Collection<String> iatas = new LinkedList<>();
 			iatas.add(vie.getIata());
-			java.util.Collection<String> icaos = new LinkedList<String>();
+			java.util.Collection<String> icaos = new LinkedList<>();
 			icaos.add(vie.getIcao());
 			icaos.add("blue");
 			PageRequest pageable = PageRequest.of(0, 1, Sort.by("iata"));
@@ -776,7 +776,7 @@ public class CouchbaseRepositoryQueryIntegrationTests extends ClusterAwareIntegr
 
 		try {
 			airportRepository.saveAll(
-					Arrays.stream(iatas).map((iata) -> new Airport("airports::" + iata, iata, iata.toLowerCase(Locale.ROOT)))
+					Arrays.stream(iatas).map(iata -> new Airport("airports::" + iata, iata, iata.toLowerCase(Locale.ROOT)))
 							.collect(Collectors.toSet()));
 			List<Airport> airports = airportRepository.withOptions(QueryOptions.queryOptions().scanConsistency(REQUEST_PLUS))
 					.findAll(Sort.by("iata"));
@@ -788,7 +788,7 @@ public class CouchbaseRepositoryQueryIntegrationTests extends ClusterAwareIntegr
 			}
 		} finally {
 			airportRepository
-					.deleteAllById(Arrays.stream(iatas).map((iata) -> "airports::" + iata).collect(Collectors.toSet()));
+					.deleteAllById(Arrays.stream(iatas).map(iata -> "airports::" + iata).collect(Collectors.toSet()));
 		}
 	}
 
@@ -800,7 +800,7 @@ public class CouchbaseRepositoryQueryIntegrationTests extends ClusterAwareIntegr
 		airportRepository.countOne();
 		try {
 			airportRepository.saveAll(
-					Arrays.stream(iatas).map((iata) -> new Airport("airports::" + iata, iata, iata.toLowerCase(Locale.ROOT)))
+					Arrays.stream(iatas).map(iata -> new Airport("airports::" + iata, iata, iata.toLowerCase(Locale.ROOT)))
 							.collect(Collectors.toSet()));
 			List<Airport> aList = couchbaseTemplate.findByQuery(Airport.class).withConsistency(REQUEST_PLUS).all();
 			Long count = airportRepository.countFancyExpression(asList("JFK"), asList("jfk"), false);
@@ -845,7 +845,7 @@ public class CouchbaseRepositoryQueryIntegrationTests extends ClusterAwareIntegr
 
 		} finally {
 			airportRepository
-					.deleteAllById(Arrays.stream(iatas).map((iata) -> "airports::" + iata).collect(Collectors.toSet()));
+					.deleteAllById(Arrays.stream(iatas).map(iata -> "airports::" + iata).collect(Collectors.toSet()));
 		}
 	}
 
@@ -854,7 +854,7 @@ public class CouchbaseRepositoryQueryIntegrationTests extends ClusterAwareIntegr
 		String[] iatas = { "JFK", "IAD", "SFO", "SJC", "SEA", "LAX", "PHX" };
 		try {
 			airportRepository.saveAll(
-					Arrays.stream(iatas).map((iata) -> new Airport("airports::" + iata, iata, iata.toLowerCase(Locale.ROOT)))
+					Arrays.stream(iatas).map(iata -> new Airport("airports::" + iata, iata, iata.toLowerCase(Locale.ROOT)))
 							.collect(Collectors.toSet()));
 			List<Airport> airports = airportRepository.groupByIata();
 			for (Airport a : airports) {
@@ -863,13 +863,13 @@ public class CouchbaseRepositoryQueryIntegrationTests extends ClusterAwareIntegr
 
 		} finally {
 			airportRepository
-					.deleteAllById(Arrays.stream(iatas).map((iata) -> "airports::" + iata).collect(Collectors.toSet()));
+					.deleteAllById(Arrays.stream(iatas).map(iata -> "airports::" + iata).collect(Collectors.toSet()));
 		}
 	}
 
 	@Test
 	void badCount() {
-		assertThrows(CouchbaseQueryExecutionException.class, () -> airportRepository.countBad());
+		assertThrows(CouchbaseQueryExecutionException.class, airportRepository::countBad);
 	}
 
 	@Test
@@ -948,7 +948,7 @@ public class CouchbaseRepositoryQueryIntegrationTests extends ClusterAwareIntegr
 
 		} finally {
 			couchbaseTemplate.removeById()
-					.all(Arrays.stream(iatas).map((iata) -> "airports::" + iata).collect(Collectors.toSet()));
+					.all(Arrays.stream(iatas).map(iata -> "airports::" + iata).collect(Collectors.toSet()));
 		}
 	}
 
@@ -1177,7 +1177,6 @@ public class CouchbaseRepositoryQueryIntegrationTests extends ClusterAwareIntegr
 		try {
 			Thread.sleep(millis); // so they are executed out-of-order
 		} catch (InterruptedException ie) {
-			;
 		}
 	}
 

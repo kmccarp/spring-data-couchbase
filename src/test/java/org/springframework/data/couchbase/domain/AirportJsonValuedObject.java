@@ -47,7 +47,7 @@ public class AirportJsonValuedObject {
 	static Map<String, String> map = Map.of("first", "1st", "second", "2nd");
 	static Map<String, String> reverseMap = new HashMap<>();
 	static {
-		map.entrySet().stream().map((entry) -> reverseMap.put(entry.getValue(), entry.getKey()))
+		map.entrySet().stream().map(entry -> reverseMap.put(entry.getValue(), entry.getKey()))
 				.collect(Collectors.toList());
 
 	}

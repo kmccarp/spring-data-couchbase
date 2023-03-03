@@ -304,9 +304,9 @@ class QueryCriteriaTests {
 					sb.append(",");
 				}
 				first = false;
-				if (e instanceof Number)
+				if (e instanceof Number) {
 					sb.append(e);
-				else {
+				} else {
 					sb.append("\"");
 					sb.append(e);
 					sb.append("\"");

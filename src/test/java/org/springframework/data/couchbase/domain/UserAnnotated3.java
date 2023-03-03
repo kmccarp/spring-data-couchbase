@@ -29,6 +29,8 @@ import org.springframework.data.couchbase.core.mapping.Document;
 @Document(expiry=1, expiryUnit = TimeUnit.SECONDS)
 public class UserAnnotated3 extends User {
 
+	private static final long serialVersionUID = 1;
+
 	public UserAnnotated3(String id, String firstname, String lastname) {
 		super(id, firstname, lastname);
 	}

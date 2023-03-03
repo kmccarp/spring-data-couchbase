@@ -31,6 +31,8 @@ import java.io.Serializable;
 @Document(replicateTo = ReplicateTo.ONE)
 public class UserAnnotatedReplicateTo extends User implements Serializable {
 
+	private static final long serialVersionUID = 1;
+
 	public UserAnnotatedReplicateTo(String id, String firstname, String lastname) {
 		super(id, firstname, lastname);
 	}

@@ -306,8 +306,9 @@ public class StringBasedN1qlQueryParser {
 					}
 					return;
 				}
-				if (prop.getFieldName().equals(typeField)) // typeField already projected
+				if (prop.getFieldName().equals(typeField)) { // typeField already projected
 					return;
+				}
 				// for distinct when no distinctFields were provided, do not include the expiration field.
 				if (forDistinct && prop.findAnnotation(Expiration.class) != null && parent == null) {
 					return;
@@ -372,7 +373,7 @@ public class StringBasedN1qlQueryParser {
 		Matcher positionMatcher = POSITIONAL_PLACEHOLDER_PATTERN.matcher(statement);
 		Matcher namedMatcher = NAMED_PLACEHOLDER_PATTERN.matcher(statement);
 
-		List<int[]> quotes = new ArrayList<int[]>();
+		List<int[]> quotes = new ArrayList<>();
 		while (quoteMatcher.find()) {
 			quotes.add(new int[] { quoteMatcher.start(), quoteMatcher.end() });
 		}
