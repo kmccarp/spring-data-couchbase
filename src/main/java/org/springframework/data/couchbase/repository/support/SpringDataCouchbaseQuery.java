@@ -262,7 +262,7 @@ public class SpringDataCouchbaseQuery<T> extends SpringDataCouchbaseQuerySupport
 		if (offset != null) {
 			basicQuery.skip(offset);
 		}
-		if (orderBy.size() > 0) {
+		if (!orderBy.isEmpty()) {
 			basicQuery.setSort(createSort(orderBy));
 		}
 		queryCustomizer.accept(basicQuery);

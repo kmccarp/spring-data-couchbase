@@ -147,8 +147,7 @@ public class CouchbaseCallbackTransactionManager implements CallbackPreferringPl
 		// Buffer the output rather than attempting to stream results back from a now-defunct lambda.
 		final List<T> out = new ArrayList<>();
 
-		return couchbaseClientFactory.getCluster().reactive().transactions().run(ctx -> {
-			return Mono.defer(() -> {
+		return couchbaseClientFactory.getCluster().reactive().transactions().run(ctx -> Mono.defer(() -> {
 				ReactiveTransaction status = new ReactiveTransaction() {
 					boolean rollbackOnly = false;
 
@@ -173,15 +172,13 @@ public class CouchbaseCallbackTransactionManager implements CallbackPreferringPl
 					}
 				};
 
-				return Flux.from(callback.doInTransaction(status)).doOnNext(v -> out.add(v)).then(Mono.defer(() -> {
+				return Flux.from(callback.doInTransaction(status)).doOnNext(out::add).then(Mono.defer(() -> {
 					if (status.isRollbackOnly()) {
 						return Mono.error(new TransactionRollbackRequestedException("TransactionStatus.isRollbackOnly() is set"));
 					}
 					return Mono.empty();
 				}));
-			});
-
-		}, this.options).thenMany(Flux.defer(() -> Flux.fromIterable(out))).onErrorMap(ex -> {
+			}), this.options).thenMany(Flux.defer(() -> Flux.fromIterable(out))).onErrorMap(ex -> {
 			if (ex instanceof RuntimeException) {
 				return convert((RuntimeException) ex);
 			}

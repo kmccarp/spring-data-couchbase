@@ -42,7 +42,7 @@ public enum ViewPostProcessor implements RepositoryProxyPostProcessor {
 
 	INSTANCE;
 
-	private static final ThreadLocal<Map<Object, Object>> VIEW_METADATA = new NamedThreadLocal<Map<Object, Object>>(
+	private static final ThreadLocal<Map<Object, Object>> VIEW_METADATA = new NamedThreadLocal<>(
 			"View Metadata");
 
 	/* 
@@ -61,14 +61,14 @@ public enum ViewPostProcessor implements RepositoryProxyPostProcessor {
 	}
 
 	/**
-	 * {@link MethodInterceptor} to inspect the currently invoked {@link Method} for a {@link View} annotation.
-	 * <p>
-	 * If a View annotation is found, it will bind it to a locally held ThreadLocal for later lookup in the
-	 * SimpleCouchbaseRepository class.
-	 *
-	 * @author David Harrigan.
-	 */
-	static enum ViewInterceptor implements MethodInterceptor {
+		* {@link MethodInterceptor} to inspect the currently invoked {@link Method} for a {@link View} annotation.
+		* <p>
+		* If a View annotation is found, it will bind it to a locally held ThreadLocal for later lookup in the
+		* SimpleCouchbaseRepository class.
+		*
+		* @author David Harrigan.
+		*/
+	enum ViewInterceptor implements MethodInterceptor {
 
 		INSTANCE;
 
@@ -79,7 +79,7 @@ public enum ViewPostProcessor implements RepositoryProxyPostProcessor {
 			if (view != null) {
 				Map<Object, Object> map = VIEW_METADATA.get();
 				if (map == null) {
-					map = new HashMap<Object, Object>();
+					map = new HashMap<>();
 					VIEW_METADATA.set(map);
 				}
 				map.put(invocation.getMethod(), view);
@@ -100,7 +100,7 @@ public enum ViewPostProcessor implements RepositoryProxyPostProcessor {
 	 *
 	 * @author David Harrigan.
 	 */
-	private static enum ThreadBoundViewMetadata implements ViewMetadataProvider {
+	private enum ThreadBoundViewMetadata implements ViewMetadataProvider {
 
 		INSTANCE;
 

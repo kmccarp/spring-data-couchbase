@@ -233,8 +233,7 @@ public class ReactiveFindByQueryOperationSupport implements ReactiveFindByQueryO
 		}
 
 		private TransactionQueryOptions buildTransactionOptions(QueryOptions options) {
-			TransactionQueryOptions opts = OptionsBuilder.buildTransactionQueryOptions(buildOptions(options));
-			return opts;
+			return OptionsBuilder.buildTransactionQueryOptions(buildOptions(options));
 		}
 
 		@Override

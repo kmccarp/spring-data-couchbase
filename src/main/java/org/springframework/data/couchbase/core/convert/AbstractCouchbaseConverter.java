@@ -128,15 +128,10 @@ public abstract class AbstractCouchbaseConverter implements CouchbaseConverter, 
 			return this.conversionService.convert(value, new TypeDescriptor(prop.getField()),
 					TypeDescriptor.valueOf(targetClass));
 		}
-
-		Object result = this.conversions.getCustomWriteTarget(prop.getType()) //
+		return this.conversions.getCustomWriteTarget(prop.getType()) //
 				.map(it -> this.conversionService.convert(value, new TypeDescriptor(prop.getField()),
 						TypeDescriptor.valueOf(it))) //
 				.orElse(value);
-		// superseded by Enum converters
-		// .orElseGet(() -> Enum.class.isAssignableFrom(value.getClass()) ? ((Enum<?>) value).name() : value);
-
-		return result;
 
 	}
 

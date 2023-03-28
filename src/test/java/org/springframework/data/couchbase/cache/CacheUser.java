@@ -25,6 +25,7 @@ import java.io.Serializable;
  * @author Michael Reiche
  */
 class CacheUser implements Serializable {
+	private static final long serialVersionUID = 1;
 	// private static final long serialVersionUID = 8817717605659870262L;
 	String firstname;
 	String lastname;
