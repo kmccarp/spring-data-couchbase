@@ -29,7 +29,7 @@ import org.springframework.util.Assert;
 import com.couchbase.client.java.codec.SerializableTranscoder;
 import com.couchbase.client.java.codec.Transcoder;
 
-public class CouchbaseCacheConfiguration {
+public final class CouchbaseCacheConfiguration {
 
 	private final Duration expiry;
 	private final boolean cacheNullValues;

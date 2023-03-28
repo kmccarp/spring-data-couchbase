@@ -39,7 +39,7 @@ import org.springframework.data.repository.cdi.CdiRepositoryExtensionSupport;
  */
 public class CouchbaseRepositoryExtension extends CdiRepositoryExtensionSupport {
 
-	private final Map<Set<Annotation>, Bean<CouchbaseOperations>> couchbaseOperationsMap = new HashMap<Set<Annotation>, Bean<CouchbaseOperations>>();
+	private final Map<Set<Annotation>, Bean<CouchbaseOperations>> couchbaseOperationsMap = new HashMap<>();
 
 	/**
 	 * Implementation of a an observer which checks for CouchbaseOperations beans and stores them in
@@ -97,7 +97,7 @@ public class CouchbaseRepositoryExtension extends CdiRepositoryExtensionSupport 
 					CouchbaseOperations.class.getName(), qualifiers));
 		}
 
-		return new CouchbaseRepositoryBean<T>(couchbaseOperationsBean, qualifiers, repositoryType, beanManager,
+		return new CouchbaseRepositoryBean<>(couchbaseOperationsBean, qualifiers, repositoryType, beanManager,
 				getCustomImplementationDetector());
 	}
 }

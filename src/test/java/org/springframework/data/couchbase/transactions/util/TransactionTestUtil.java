@@ -25,7 +25,7 @@ import org.springframework.data.couchbase.core.TransactionalSupport;
  *
  * @author Graham Pople
  */
-public class TransactionTestUtil {
+public final class TransactionTestUtil {
 	private TransactionTestUtil() {}
 
 	public static void assertInTransaction() {

@@ -97,8 +97,7 @@ public class N1qlQueryCreator extends AbstractQueryCreator<Query, QueryCriteria>
 	static class MyConverter implements Converter<CouchbasePersistentProperty, String> {
 		@Override
 		public String convert(CouchbasePersistentProperty source) {
-			return new StringBuilder(source.getFieldName().length() + 2).append("`").append(source.getFieldName()).append("`")
-					.toString();
+			return "`" + source.getFieldName() + "`";
 		}
 	}
 
@@ -121,8 +120,7 @@ public class N1qlQueryCreator extends AbstractQueryCreator<Query, QueryCriteria>
 
 	@Override
 	protected Query complete(QueryCriteria criteria, Sort sort) {
-		Query q = (criteria == null ? new Query() : new Query().addCriteria(criteria)).with(sort);
-		return q;
+		return (criteria == null ? new Query() : new Query().addCriteria(criteria)).with(sort);
 	}
 
 	private QueryCriteria from(final Part part, final CouchbasePersistentProperty property, final QueryCriteria criteria,

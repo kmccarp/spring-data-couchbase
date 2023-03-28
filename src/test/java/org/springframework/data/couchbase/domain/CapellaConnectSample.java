@@ -145,17 +145,17 @@ public class CapellaConnectSample {
 		return endpointsSrv;
 	}
 
-	private static Map<String, Object> doRequest(String hostname, String cbc_api_method, String cbc_api_endpoint) {
+	private static Map<String, Object> doRequest(String hostname, String cbcApiMethod, String cbcApiEndpoint) {
 		Map<String, Object> decoded;
 		String responseString;
 		try {
-			String cbc_api_now = Long.toString(System.currentTimeMillis());
-			String authorizationValue = getApiSignature(cbc_api_method, cbc_api_endpoint, cbc_api_now);
-			String urlString = "https://" + hostname + cbc_api_endpoint;
+			String cbcApiNow = Long.toString(System.currentTimeMillis());
+			String authorizationValue = getApiSignature(cbcApiMethod, cbcApiEndpoint, cbcApiNow);
+			String urlString = "https://" + hostname + cbcApiEndpoint;
 			System.err.println("curl --header \"" + authorizationHeaderLabel + ": " + authorizationValue + "\" --header \""
-					+ timestampHeaderLabel + ": " + cbc_api_now + "\" " + urlString);
+					+ timestampHeaderLabel + ": " + cbcApiNow + "\" " + urlString);
 			Response response = httpClient.newCall(new Request.Builder().header(authorizationHeaderLabel, authorizationValue)
-					.header(timestampHeaderLabel, cbc_api_now).url(urlString).build()).execute();
+					.header(timestampHeaderLabel, cbcApiNow).url(urlString).build()).execute();
 			responseString = response.body().string();
 			System.err.println(responseString);
 		} catch (IOException | NoSuchAlgorithmException | InvalidKeyException e) {
@@ -172,9 +172,9 @@ public class CapellaConnectSample {
 
 	private static String getApiSignature(String cbc_api_method, String cbc_api_endpoint, String cbc_api_now)
 			throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
-		String cbc_api_message = cbc_api_method + '\n' + cbc_api_endpoint + '\n' + cbc_api_now;
+		String cbcApiMessage = cbc_api_method + '\n' + cbc_api_endpoint + '\n' + cbc_api_now;
 		return "Bearer " + cbc_access_key + ':' + new String(Base64.getEncoder()
-				.encode(hmac("hmacSHA256", cbc_secret_key.getBytes("utf-8"), cbc_api_message.getBytes("utf-8"))));
+				.encode(hmac("hmacSHA256", cbc_secret_key.getBytes("utf-8"), cbcApiMessage.getBytes("utf-8"))));
 	}
 
 	static byte[] hmac(String algorithm, byte[] key, byte[] message)

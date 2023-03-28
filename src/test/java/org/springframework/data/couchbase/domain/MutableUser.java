@@ -8,6 +8,7 @@ import java.util.List;
 
 @Document
 public class MutableUser extends User{
+	private static final long serialVersionUID = 1;
     public MutableUser(String id, String firstname, String lastname) {
         super(id, firstname, lastname);
     }
