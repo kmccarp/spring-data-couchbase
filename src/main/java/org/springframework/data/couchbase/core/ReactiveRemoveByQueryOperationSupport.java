@@ -104,7 +104,7 @@ public class ReactiveRemoveByQueryOperationSupport implements ReactiveRemoveByQu
 					CoreQueryContext queryContext = CollectionIdentifier.DEFAULT_SCOPE.equals(rs.name()) ? null : CoreQueryContext.of(rs.bucketName(), rs.name());
 					return transactionContext.get().getCore()
 							.queryBlocking(statement, queryContext, opts.builder().build(), false)
-							.flatMapIterable(result -> result.collectRows()).map(row -> {
+							.flatMapIterable(CoreQueryResult::collectRows).map(row -> {
 								JsonObject json = JsonObject.fromJson(row.data());
 								return new RemoveResult(json.getString(TemplateUtils.SELECT_ID), json.getLong(TemplateUtils.SELECT_CAS),
 										Optional.empty());

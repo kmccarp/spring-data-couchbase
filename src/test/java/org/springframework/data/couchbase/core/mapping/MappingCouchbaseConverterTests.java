@@ -72,8 +72,8 @@ import org.springframework.data.mapping.MappingException;
  */
 public class MappingCouchbaseConverterTests {
 
-	private static MappingCouchbaseConverter converter = new MappingCouchbaseConverter();
-	private static MappingCouchbaseConverter customConverter = (new Config()).mappingCouchbaseConverter();
+	private static final MappingCouchbaseConverter converter = new MappingCouchbaseConverter();
+	private static final MappingCouchbaseConverter customConverter = (new Config()).mappingCouchbaseConverter();
 
 	static {
 		converter.afterPropertiesSet();
@@ -94,7 +94,7 @@ public class MappingCouchbaseConverterTests {
 			converter.write("hello", new CouchbaseDocument());
 		} catch (Exception e) {
 			if (!(e instanceof MappingException)
-					&& !e.getClass().getName().equals("java.lang.reflect.InaccessibleObjectException")) {
+					&& !"java.lang.reflect.InaccessibleObjectException".equals(e.getClass().getName())) {
 				throw new RuntimeException("Should have thrown MappingException or InaccessibleObjectException", e);
 			}
 		}
@@ -106,7 +106,7 @@ public class MappingCouchbaseConverterTests {
 			converter.write(true, new CouchbaseDocument());
 		} catch (Exception e) {
 			if (!(e instanceof MappingException)
-					&& !e.getClass().getName().equals("java.lang.reflect.InaccessibleObjectException")) {
+					&& !"java.lang.reflect.InaccessibleObjectException".equals(e.getClass().getName())) {
 				throw new RuntimeException("Should have thrown MappingException or InaccessibleObjectException", e);
 			}
 		}
@@ -118,7 +118,7 @@ public class MappingCouchbaseConverterTests {
 			converter.write(42, new CouchbaseDocument());
 		} catch (Exception e) {
 			if (!(e instanceof MappingException)
-					&& !e.getClass().getName().equals("java.lang.reflect.InaccessibleObjectException")) {
+					&& !"java.lang.reflect.InaccessibleObjectException".equals(e.getClass().getName())) {
 				throw new RuntimeException("Should have thrown MappingException or InaccessibleObjectException", e);
 			}
 		}
@@ -442,7 +442,7 @@ public class MappingCouchbaseConverterTests {
 
 		final String email = "foo@bar.com";
 		final Email addy = new Email(email);
-		List<Email> listOfEmails = new ArrayList<Email>();
+		List<Email> listOfEmails = new ArrayList<>();
 		listOfEmails.add(addy);
 
 		ValueEntity entity = new ValueEntity(addy, listOfEmails);
@@ -476,7 +476,7 @@ public class MappingCouchbaseConverterTests {
 
 		final String email = "foo@bar.com";
 		final Emailx addy = new Emailx(email);
-		List<Emailx> listOfEmails = new ArrayList<Emailx>();
+		List<Emailx> listOfEmails = new ArrayList<>();
 		listOfEmails.add(addy);
 
 		ValueEntityx entity = new ValueEntityx(addy, listOfEmails);
@@ -555,14 +555,14 @@ public class MappingCouchbaseConverterTests {
 		assertThat(readConverted.mapOfValues.get("val2")).isEqualTo(mapOfValues.get("val2"));
 	}
 
-	static private String toString(ChoiceFormat choiceFormat) {
+	private static String toString(ChoiceFormat choiceFormat) {
 		String limits = Arrays.stream(choiceFormat.getLimits()).mapToObj(String::valueOf).collect(Collectors.joining(","));
-		String formats = Arrays.stream(choiceFormat.getFormats()).map((o) -> String.valueOf(o))
+		String formats = Arrays.stream(choiceFormat.getFormats()).map(String::valueOf)
 				.collect(Collectors.joining(","));
 		return limits + "|" + formats;
 	}
 
-	static private ChoiceFormat fromString(String source) {
+	private static ChoiceFormat fromString(String source) {
 		String[] split = source.split("\\|");
 		double[] limits = Arrays.stream(split[0].split(",")).mapToDouble(Double::parseDouble).toArray();
 		String[] formats = split[1].split(",");
@@ -758,7 +758,7 @@ public class MappingCouchbaseConverterTests {
 
 	static class EntityWithoutID {
 
-		private String attr0;
+		private final String attr0;
 
 		public EntityWithoutID(String a0) {
 			attr0 = a0;
@@ -771,7 +771,7 @@ public class MappingCouchbaseConverterTests {
 	}
 
 	static class StringEntity extends BaseEntity {
-		private String attr0;
+		private final String attr0;
 
 		public StringEntity(String attr0) {
 			this.attr0 = attr0;
@@ -779,7 +779,7 @@ public class MappingCouchbaseConverterTests {
 	}
 
 	static class BigIntegerEntity extends BaseEntity {
-		private BigInteger attr0;
+		private final BigInteger attr0;
 
 		public BigIntegerEntity(BigInteger attr0) {
 			this.attr0 = attr0;
@@ -787,7 +787,7 @@ public class MappingCouchbaseConverterTests {
 	}
 
 	static class BigDecimalEntity extends BaseEntity {
-		private BigDecimal attr0;
+		private final BigDecimal attr0;
 
 		public BigDecimalEntity(BigDecimal attr0) {
 			this.attr0 = attr0;
@@ -795,7 +795,7 @@ public class MappingCouchbaseConverterTests {
 	}
 
 	static class NumberEntity extends BaseEntity {
-		private long attr0;
+		private final long attr0;
 
 		public NumberEntity(long attr0) {
 			this.attr0 = attr0;
@@ -803,7 +803,7 @@ public class MappingCouchbaseConverterTests {
 	}
 
 	static class BooleanEntity extends BaseEntity {
-		private boolean attr0;
+		private final boolean attr0;
 
 		public BooleanEntity(boolean attr0) {
 			this.attr0 = attr0;
@@ -811,10 +811,10 @@ public class MappingCouchbaseConverterTests {
 	}
 
 	static class MixedSimpleEntity extends BaseEntity {
-		private String attr0;
-		private int attr1;
-		private double attr2;
-		private boolean attr3;
+		private final String attr0;
+		private final int attr1;
+		private final double attr2;
+		private final boolean attr3;
 
 		public MixedSimpleEntity(String attr0, int attr1, double attr2, boolean attr3) {
 			this.attr0 = attr0;
@@ -825,16 +825,16 @@ public class MappingCouchbaseConverterTests {
 	}
 
 	static class UninitializedEntity extends BaseEntity {
-		private String attr0 = null;
+		private String attr0;
 		private int attr1;
 		private Integer attr2;
 	}
 
 	static class MapEntity extends BaseEntity {
-		private Map<String, String> attr0;
-		private Map<String, Boolean> attr1;
-		private Map<Integer, String> attr2;
-		private Map<String, Map<String, String>> attr3;
+		private final Map<String, String> attr0;
+		private final Map<String, Boolean> attr1;
+		private final Map<Integer, String> attr2;
+		private final Map<String, Map<String, String>> attr3;
 
 		public MapEntity(Map<String, String> attr0, Map<String, Boolean> attr1, Map<Integer, String> attr2,
 				Map<String, Map<String, String>> attr3) {
@@ -846,9 +846,9 @@ public class MappingCouchbaseConverterTests {
 	}
 
 	static class ListEntity extends BaseEntity {
-		private List<String> attr0;
-		private List<Integer> attr1;
-		private List<List<String>> attr2;
+		private final List<String> attr0;
+		private final List<Integer> attr1;
+		private final List<List<String>> attr2;
 
 		ListEntity(List<String> attr0, List<Integer> attr1, List<List<String>> attr2) {
 			this.attr0 = attr0;
@@ -858,9 +858,9 @@ public class MappingCouchbaseConverterTests {
 	}
 
 	static class SetEntity extends BaseEntity {
-		private Set<String> attr0;
-		private Set<Integer> attr1;
-		private Set<Set<String>> attr2;
+		private final Set<String> attr0;
+		private final Set<Integer> attr1;
+		private final Set<Set<String>> attr2;
 
 		SetEntity(Set<String> attr0, Set<Integer> attr1, Set<Set<String>> attr2) {
 			this.attr0 = attr0;
@@ -870,8 +870,8 @@ public class MappingCouchbaseConverterTests {
 	}
 
 	static class ValueEntity extends BaseEntity {
-		private Email email;
-		private List<Email> listOfEmails;
+		private final Email email;
+		private final List<Email> listOfEmails;
 
 		public ValueEntity(Email email, List<Email> listOfEmails) {
 			this.email = email;
@@ -880,7 +880,7 @@ public class MappingCouchbaseConverterTests {
 	}
 
 	static class Email {
-		private String emailAddr;
+		private final String emailAddr;
 
 		public Email(String emailAddr) {
 			this.emailAddr = emailAddr;
@@ -888,9 +888,9 @@ public class MappingCouchbaseConverterTests {
 	}
 
 	static class CustomEntity extends BaseEntity {
-		private ChoiceFormat value;
-		private List<ChoiceFormat> listOfValues;
-		private Map<String, ChoiceFormat> mapOfValues;
+		private final ChoiceFormat value;
+		private final List<ChoiceFormat> listOfValues;
+		private final Map<String, ChoiceFormat> mapOfValues;
 
 		public CustomEntity(ChoiceFormat value, List<ChoiceFormat> listOfValues, Map<String, ChoiceFormat> mapOfValues) {
 			this.value = value;
@@ -913,9 +913,9 @@ public class MappingCouchbaseConverterTests {
 	}
 
 	static class CustomObjectEntity extends BaseEntity {
-		private CustomObject object;
-		private List<CustomObject> listOfObjects;
-		private Map<String, CustomObject> mapOfObjects;
+		private final CustomObject object;
+		private final List<CustomObject> listOfObjects;
+		private final Map<String, CustomObject> mapOfObjects;
 
 		public CustomObjectEntity(CustomObject object, List<CustomObject> listOfObjects,
 				Map<String, CustomObject> mapOfObjects) {
@@ -938,7 +938,7 @@ public class MappingCouchbaseConverterTests {
 
 	// @TypeAlias("x")
 	static class Emailx {
-		private String emailAddr;
+		private final String emailAddr;
 
 		public Emailx(String emailAddr) {
 			this.emailAddr = emailAddr;
@@ -946,7 +946,7 @@ public class MappingCouchbaseConverterTests {
 	}
 
 	static class CustomObject {
-		private BigDecimal weight;
+		private final BigDecimal weight;
 
 		public CustomObject(BigDecimal weight) {
 			this.weight = weight;
@@ -954,9 +954,9 @@ public class MappingCouchbaseConverterTests {
 	}
 
 	static class DateEntity extends BaseEntity {
-		private Date created;
-		private Calendar modified;
-		private LocalDateTime deleted;
+		private final Date created;
+		private final Calendar modified;
+		private final LocalDateTime deleted;
 
 		public DateEntity(Date created, Calendar modified, LocalDateTime deleted) {
 			this.created = created;
@@ -967,7 +967,7 @@ public class MappingCouchbaseConverterTests {
 
 	static class UuidIdEntity {
 		@Id private UUID id;
-		private UUID other;
+		private final UUID other;
 
 		public UuidIdEntity(UUID id, UUID other) {
 			this.id = id;

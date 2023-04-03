@@ -544,7 +544,7 @@ public class MappingCouchbaseConverter extends AbstractCouchbaseConverter implem
 
 		if (idProperty != null && target.getId() == null) {
 			String id = accessor.getProperty(idProperty, String.class);
-			if (idProperty.isAnnotationPresent(GeneratedValue.class) && (id == null || id.equals(""))) {
+			if (idProperty.isAnnotationPresent(GeneratedValue.class) && (id == null || "".equals(id))) {
 				generatedValueInfo = idProperty.findAnnotation(GeneratedValue.class);
 				String generatedId = generateId(generatedValueInfo, prefixes, suffixes, idAttributes);
 				target.setId(generatedId);
@@ -556,15 +556,12 @@ public class MappingCouchbaseConverter extends AbstractCouchbaseConverter implem
 
 		}
 
-		entity.doWithAssociations(new AssociationHandler<CouchbasePersistentProperty>() {
-			@Override
-			public void doWithAssociation(final Association<CouchbasePersistentProperty> association) {
-				CouchbasePersistentProperty inverseProp = association.getInverse();
-				Class<?> type = inverseProp.getType();
-				Object propertyObj = accessor.getProperty(inverseProp, type);
-				if (null != propertyObj) {
-					writePropertyInternal(propertyObj, target, inverseProp, accessor);
-				}
+		entity.doWithAssociations(association -> {
+			CouchbasePersistentProperty inverseProp = association.getInverse();
+			Class<?> type = inverseProp.getType();
+			Object propertyObj = accessor.getProperty(inverseProp, type);
+			if (null != propertyObj) {
+				writePropertyInternal(propertyObj, target, inverseProp, accessor);
 			}
 		});
 
@@ -579,46 +576,43 @@ public class MappingCouchbaseConverter extends AbstractCouchbaseConverter implem
 			final ConvertingPropertyAccessor<Object> accessor, final CouchbasePersistentProperty idProperty,
 			final CouchbasePersistentProperty versionProperty, final TreeMap<Integer, String> prefixes,
 			final TreeMap<Integer, String> suffixes, final TreeMap<Integer, String> idAttributes) {
-		entity.doWithProperties(new PropertyHandler<CouchbasePersistentProperty>() {
-			@Override
-			public void doWithPersistentProperty(final CouchbasePersistentProperty prop) {
-				if (prop.equals(idProperty) || (versionProperty != null && prop.equals(versionProperty))) {
-					return;
-				} else if (prop.isAnnotationPresent(N1qlJoin.class)) {
+		entity.doWithProperties(prop -> {
+			if (prop.equals(idProperty) || (versionProperty != null && prop.equals(versionProperty))) {
+				return;
+			} else if (prop.isAnnotationPresent(N1qlJoin.class)) {
+				return;
+			}
+
+			Object propertyObj = accessor.getProperty(prop, prop.getType());
+			if (null != propertyObj) {
+				if (prop.isAnnotationPresent(IdPrefix.class)) {
+					IdPrefix prefix = prop.findAnnotation(IdPrefix.class);
+					int order = prefix.order();
+					prefixes.put(order, convertToString(propertyObj));
 					return;
 				}
 
-				Object propertyObj = accessor.getProperty(prop, prop.getType());
-				if (null != propertyObj) {
-					if (prop.isAnnotationPresent(IdPrefix.class)) {
-						IdPrefix prefix = prop.findAnnotation(IdPrefix.class);
-						int order = prefix.order();
-						prefixes.put(order, convertToString(propertyObj));
-						return;
-					}
+				if (prop.isAnnotationPresent(IdSuffix.class)) {
+					IdSuffix suffix = prop.findAnnotation(IdSuffix.class);
+					int order = suffix.order();
+					suffixes.put(order, convertToString(propertyObj));
+					return;
+				}
 
-					if (prop.isAnnotationPresent(IdSuffix.class)) {
-						IdSuffix suffix = prop.findAnnotation(IdSuffix.class);
-						int order = suffix.order();
-						suffixes.put(order, convertToString(propertyObj));
-						return;
-					}
+				if (prop.isAnnotationPresent(IdAttribute.class)) {
+					IdAttribute idAttribute = prop.findAnnotation(IdAttribute.class);
+					int order = idAttribute.order();
+					idAttributes.put(order, convertToString(propertyObj));
+				}
 
-					if (prop.isAnnotationPresent(IdAttribute.class)) {
-						IdAttribute idAttribute = prop.findAnnotation(IdAttribute.class);
-						int order = idAttribute.order();
-						idAttributes.put(order, convertToString(propertyObj));
-					}
+				if (prop.isAnnotationPresent(Transient.class)) {
+					return;
+				}
 
-					if (prop.isAnnotationPresent(Transient.class)) {
-						return;
-					}
-
-					if (!conversions.isSimpleType(prop.getType())) {
-						writePropertyInternal(propertyObj, target, prop, accessor);
-					} else {
-						writeSimpleInternal(prop, accessor, target, prop.getFieldName());
-					}
+				if (!conversions.isSimpleType(prop.getType())) {
+					writePropertyInternal(propertyObj, target, prop, accessor);
+				} else {
+					writeSimpleInternal(prop, accessor, target, prop.getFieldName());
 				}
 			}
 		});
@@ -963,8 +957,7 @@ public class MappingCouchbaseConverter extends AbstractCouchbaseConverter implem
 			try {
 				return (R) conversions.getPropertyValueConversions().getValueConverter(prop).read(value,
 						new CouchbaseConversionContext(prop, this, null));
-			} catch (ConverterHasNoConversion noConversion) {
-				; // ignore
+			} catch (ConverterHasNoConversion noConversion) { // ignore
 			}
 		}
 		if (conversions.hasCustomReadTarget(value.getClass(), rawType)) {
@@ -1093,7 +1086,7 @@ public class MappingCouchbaseConverter extends AbstractCouchbaseConverter implem
 					value = source.get(property.getFieldName());
 					noDecrypt = true;
 				} else if (value != null
-						&& !((value instanceof CouchbaseDocument) && (((CouchbaseDocument) value)).containsKey("kid"))) {
+						&& !((value instanceof CouchbaseDocument) && ((CouchbaseDocument) value).containsKey("kid"))) {
 					noDecrypt = true;
 					// TODO - should we throw an exception, or just ignore the problem of not being encrypted with noDecrypt=true?
 					throw new RuntimeException("should have been encrypted, but is not " + maybeFieldName);

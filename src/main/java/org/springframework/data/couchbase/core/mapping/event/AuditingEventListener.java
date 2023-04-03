@@ -66,10 +66,6 @@ public class AuditingEventListener implements ApplicationListener<CouchbaseMappi
 			Optional.ofNullable(event.getSource())//
 					.ifPresent(it -> auditingHandlerFactory.getObject().markAudited(it));
 		}
-		if (event instanceof BeforeSaveEvent) {}
-		if (event instanceof AfterSaveEvent) {}
-		if (event instanceof BeforeDeleteEvent) {}
-		if (event instanceof AfterDeleteEvent) {}
 
 		if (LOG.isTraceEnabled()) {
 			LOG.trace("{} {}", event.getClass().getSimpleName(), event.getSource());

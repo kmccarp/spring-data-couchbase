@@ -49,6 +49,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 @TypeAlias(AbstractingTypeMapper.Type.ABSTRACTUSER)
 public class User extends AbstractUser implements Serializable {
 
+	private static final long serialVersionUID = 1;
+
 	public JsonNode jsonNode;
 	public JsonObject jsonObject;
 	public JsonArray jsonArray;

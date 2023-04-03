@@ -95,7 +95,7 @@ public class CouchbaseRepositoryQuerydslIntegrationTests extends JavaIntegration
 	SpringDataCouchbaseSerializer serializer = new SpringDataCouchbaseSerializer(couchbaseTemplate.getConverter());
 
 	@BeforeAll
-	static public void beforeAll() {
+	public static void beforeAll() {
 		callSuperBeforeAll(new Object() {});
 		ApplicationContext ac = new AnnotationConfigApplicationContext(
 				CouchbaseRepositoryQuerydslIntegrationTests.Config.class);
@@ -107,7 +107,7 @@ public class CouchbaseRepositoryQuerydslIntegrationTests extends JavaIntegration
 	}
 
 	@AfterAll
-	static public void afterAll() {
+	public static void afterAll() {
 		ApplicationContext ac = new AnnotationConfigApplicationContext(
 				CouchbaseRepositoryQuerydslIntegrationTests.Config.class);
 		CouchbaseTemplate template = (CouchbaseTemplate) ac.getBean("couchbaseTemplate");
@@ -615,7 +615,6 @@ public class CouchbaseRepositoryQuerydslIntegrationTests extends JavaIntegration
 		try {
 			Thread.sleep(millis); // so they are executed out-of-order
 		} catch (InterruptedException ie) {
-			;
 		}
 	}
 
