@@ -48,6 +48,8 @@ import com.couchbase.client.java.query.QueryScanConsistency;
 @TypeAlias(AbstractingTypeMapper.Type.ABSTRACTUSER)
 public class UserEncrypted extends AbstractUser implements Serializable {
 
+	private static final long serialVersionUID = 1;
+
 	public UserEncrypted() {
 		this._class = "abstractuser";
 		this.subtype = AbstractingTypeMapper.Type.USER;
@@ -145,7 +147,7 @@ public class UserEncrypted extends AbstractUser implements Serializable {
 
 	public List nicknames;
 
-	public Address homeAddress = null;
+	public Address homeAddress;
 	public List<AddressWithEncStreet> addresses = new ArrayList<>();
 
 	public String getLastname() {

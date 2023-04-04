@@ -237,7 +237,7 @@ public class CouchbasePersonTransactionIntegrationTests extends JavaIntegrationT
 		Mono<Person> result = rxCBTmpl.insertById(Person.class).one(WalterWhite) //
 				.doOnNext(ppp -> TransactionalSupport.checkForTransactionInThreadLocalStorage()
 						.doOnNext(v -> assertTrue(v.isPresent())))
-				.map(p -> throwSimulateFailureException(p)).as(transactionalOperator::transactional); // tx
+				.map(JavaIntegrationTests::throwSimulateFailureException).as(transactionalOperator::transactional); // tx
 		assertThrowsWithCause(result::block, TransactionSystemUnambiguousException.class, SimulateFailureException.class);
 		Person pFound = cbTmpl.findById(Person.class).one(WalterWhite.id());
 		assertNull(pFound, "insert should have been rolled back");
@@ -340,7 +340,7 @@ public class CouchbasePersonTransactionIntegrationTests extends JavaIntegrationT
 			StringBuilder sb = new StringBuilder();
 			sb.append("EventLog : {\n");
 			sb.append("  id : " + getId());
-			sb.append(", action: " + action);
+			sb.append(", action: ").append(action);
 			return sb.toString();
 		}
 	}

@@ -31,6 +31,8 @@ import java.io.Serializable;
 @Document(persistTo = PersistTo.ACTIVE)
 public class UserAnnotatedPersistTo extends User implements Serializable {
 
+	private static final long serialVersionUID = 1;
+
 	public UserAnnotatedPersistTo(String id, String firstname, String lastname) {
 		super(id, firstname, lastname);
 	}

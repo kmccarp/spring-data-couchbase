@@ -57,7 +57,7 @@ public class CouchbaseMappingContext
 
 	private boolean autoIndexCreation = true;
 	private ApplicationEventPublisher eventPublisher;
-	private CouchbasePersistentEntityIndexCreator indexCreator = null;
+	private CouchbasePersistentEntityIndexCreator indexCreator;
 
 	/**
 	 * Configures the {@link FieldNamingStrategy} to be used to determine the field name if no manual mapping is applied.
@@ -79,7 +79,7 @@ public class CouchbaseMappingContext
 	 */
 	@Override
 	protected <T> BasicCouchbasePersistentEntity<?> createPersistentEntity(final TypeInformation<T> typeInformation) {
-		BasicCouchbasePersistentEntity<T> entity = new BasicCouchbasePersistentEntity<T>(typeInformation);
+		BasicCouchbasePersistentEntity<T> entity = new BasicCouchbasePersistentEntity<>(typeInformation);
 		if (context != null) {
 			entity.setEnvironment(context.getEnvironment());
 		}

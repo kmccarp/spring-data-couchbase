@@ -35,7 +35,7 @@ public class TemplateUtils {
 	public static final String SELECT_ID_3x = "_ID";
 	public static final String SELECT_CAS_3x = "_CAS";
 	public static final String SELECT_COUNT = CountFragment.COUNT_ALIAS;
-	private static PersistenceExceptionTranslator exceptionTranslator = new CouchbaseExceptionTranslator();
+	private static final PersistenceExceptionTranslator exceptionTranslator = new CouchbaseExceptionTranslator();
 
 	public static Throwable translateError(Throwable e) {
 		if (e instanceof RuntimeException) {

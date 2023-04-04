@@ -60,7 +60,7 @@ public class Query {
 	private QueryScanConsistency queryScanConsistency;
 	private Meta meta;
 
-	static private final Pattern WHERE_PATTERN = Pattern.compile("\\sWHERE\\s");
+	private static final Pattern WHERE_PATTERN = Pattern.compile("\\sWHERE\\s");
 	private static final Logger LOG = LoggerFactory.getLogger(Query.class);
 
 	public Query() {}
@@ -317,7 +317,7 @@ public class Query {
 	 */
 	private static boolean notQuoted(int start, int end, String querySoFar) {
 		Matcher quoteMatcher = StringBasedN1qlQueryParser.QUOTE_DETECTION_PATTERN.matcher(querySoFar);
-		List<int[]> quotes = new ArrayList<int[]>();
+		List<int[]> quotes = new ArrayList<>();
 		while (quoteMatcher.find()) {
 			quotes.add(new int[] { quoteMatcher.start(), quoteMatcher.end() });
 		}
@@ -439,7 +439,6 @@ public class Query {
 		if (this.parameters.equals(that.parameters)) {
 			return false;
 		}
-		;
 		if (this.skip != that.skip) {
 			return false;
 		}
@@ -459,10 +458,7 @@ public class Query {
 		if (this.queryScanConsistency != that.queryScanConsistency) {
 			return false;
 		}
-		if (!meta.equals(that.meta)) {
-			return false;
-		}
-		return true;
+		return meta.equals(that.meta);
 	}
 
 }

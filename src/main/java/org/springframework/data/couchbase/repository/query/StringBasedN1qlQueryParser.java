@@ -284,7 +284,7 @@ public class StringBasedN1qlQueryParser {
 					PersistentPropertyPath<CouchbasePersistentProperty> path = couchbaseConverter.getMappingContext()
 							.getPersistentPropertyPath(prop.getName(), persistentEntity.getTypeInformation().getType());
 					String projectField = N1qlQueryCreator.addMetaIfRequired(bucketName, path, prop, persistentEntity).toString();
-					sb.append(projectField + " AS " + SELECT_ID);
+					sb.append(projectField + " AS ").append(SELECT_ID);
 					if (fieldList != null) {
 						fieldList.remove(prop.getFieldName());
 					}
@@ -300,14 +300,15 @@ public class StringBasedN1qlQueryParser {
 					PersistentPropertyPath<CouchbasePersistentProperty> path = couchbaseConverter.getMappingContext()
 							.getPersistentPropertyPath(prop.getName(), persistentEntity.getTypeInformation().getType());
 					String projectField = N1qlQueryCreator.addMetaIfRequired(bucketName, path, prop, persistentEntity).toString();
-					sb.append(projectField + " AS " + SELECT_CAS);
+					sb.append(projectField + " AS ").append(SELECT_CAS);
 					if (fieldList != null) {
 						fieldList.remove(prop.getFieldName());
 					}
 					return;
 				}
-				if (prop.getFieldName().equals(typeField)) // typeField already projected
+				if (prop.getFieldName().equals(typeField)) { // typeField already projected
 					return;
+				}
 				// for distinct when no distinctFields were provided, do not include the expiration field.
 				if (forDistinct && prop.findAnnotation(Expiration.class) != null && parent == null) {
 					return;
@@ -372,7 +373,7 @@ public class StringBasedN1qlQueryParser {
 		Matcher positionMatcher = POSITIONAL_PLACEHOLDER_PATTERN.matcher(statement);
 		Matcher namedMatcher = NAMED_PLACEHOLDER_PATTERN.matcher(statement);
 
-		List<int[]> quotes = new ArrayList<int[]>();
+		List<int[]> quotes = new ArrayList<>();
 		while (quoteMatcher.find()) {
 			quotes.add(new int[] { quoteMatcher.start(), quoteMatcher.end() });
 		}

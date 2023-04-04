@@ -127,9 +127,7 @@ public class Meta {
 	 */
 	@Override
 	public int hashCode() {
-
-		int hash = ObjectUtils.nullSafeHashCode(this.values);
-		return hash;
+		return ObjectUtils.nullSafeHashCode(this.values);
 	}
 
 	/*
