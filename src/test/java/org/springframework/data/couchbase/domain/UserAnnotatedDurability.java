@@ -30,6 +30,8 @@ import java.io.Serializable;
 @Document(durabilityLevel = DurabilityLevel.MAJORITY)
 public class UserAnnotatedDurability extends User implements Serializable {
 
+	private static final long serialVersionUID = 1;
+
 	public UserAnnotatedDurability(String id, String firstname, String lastname) {
 		super(id, firstname, lastname);
 	}

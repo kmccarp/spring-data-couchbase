@@ -44,6 +44,8 @@ import reactor.core.publisher.Mono;
 public class CouchbaseTransactionInterceptor extends TransactionInterceptor
 		implements MethodInterceptor, Serializable {
 
+	private static final long serialVersionUID = 1;
+
 	public CouchbaseTransactionInterceptor(TransactionManager ptm, TransactionAttributeSource tas) {
 		super(ptm, tas);
 	}
@@ -52,7 +54,7 @@ public class CouchbaseTransactionInterceptor extends TransactionInterceptor
 	protected Object invokeWithinTransaction(Method method, @Nullable Class<?> targetClass,
 			final InvocationCallback invocation) throws Throwable {
 		final TransactionAttributeSource tas = getTransactionAttributeSource();
-		final TransactionAttribute txAttr = (tas != null ? tas.getTransactionAttribute(method, targetClass) : null);
+		final TransactionAttribute txAttr = tas != null ? tas.getTransactionAttribute(method, targetClass) : null;
 
 		if (getTransactionManager() instanceof CouchbaseCallbackTransactionManager) {
 			CouchbaseCallbackTransactionManager manager = (CouchbaseCallbackTransactionManager) getTransactionManager();
@@ -61,8 +63,6 @@ public class CouchbaseTransactionInterceptor extends TransactionInterceptor
 				return manager.executeReactive(txAttr, ignored -> {
 					try {
 						return (Mono<?>) invocation.proceedWithInvocation();
-					} catch (RuntimeException e) {
-						throw e;
 					} catch (Throwable e) {
 						throw new RuntimeException(e);
 					}
@@ -71,8 +71,6 @@ public class CouchbaseTransactionInterceptor extends TransactionInterceptor
 				return manager.executeReactive(txAttr, ignored -> {
 					try {
 						return (Flux<?>) invocation.proceedWithInvocation();
-					} catch (RuntimeException e) {
-						throw e;
 					} catch (Throwable e) {
 						throw new RuntimeException(e);
 					}
@@ -81,8 +79,6 @@ public class CouchbaseTransactionInterceptor extends TransactionInterceptor
 				return manager.execute(txAttr, ignored -> {
 					try {
 						return invocation.proceedWithInvocation();
-					} catch (RuntimeException e) {
-						throw e;
 					} catch (Throwable e) {
 						throw new RuntimeException(e);
 					}

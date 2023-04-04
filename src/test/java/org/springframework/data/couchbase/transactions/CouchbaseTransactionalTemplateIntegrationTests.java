@@ -106,9 +106,7 @@ public class CouchbaseTransactionalTemplateIntegrationTests extends JavaIntegrat
 	@Test
 	public void committedInsert() {
 		AtomicInteger tryCount = new AtomicInteger(0);
-		Person inserted = personService.doInTransaction(tryCount, (ops) -> {
-			return ops.insertById(Person.class).one(WalterWhite.withIdFirstname());
-		});
+		Person inserted = personService.doInTransaction(tryCount, ops -> ops.insertById(Person.class).one(WalterWhite.withIdFirstname()));
 
 		Person fetched = operations.findById(Person.class).one(inserted.id());
 		assertEquals(inserted.getFirstname(), fetched.getFirstname());
@@ -121,7 +119,7 @@ public class CouchbaseTransactionalTemplateIntegrationTests extends JavaIntegrat
 		AtomicInteger tryCount = new AtomicInteger();
 		Person person = operations.insertById(Person.class).one(WalterWhite);
 
-		personService.fetchAndReplace(person.id(), tryCount, (p) -> {
+		personService.fetchAndReplace(person.id(), tryCount, p -> {
 			p.setFirstname("changed");
 			return p;
 		});
@@ -150,9 +148,7 @@ public class CouchbaseTransactionalTemplateIntegrationTests extends JavaIntegrat
 		AtomicInteger tryCount = new AtomicInteger();
 		Person person = operations.insertById(Person.class).one(WalterWhite.withIdFirstname());
 
-		List<RemoveResult> removed = personService.doInTransaction(tryCount, ops -> {
-			return ops.removeByQuery(Person.class).matching(QueryCriteria.where("firstname").eq(person.getFirstname())).all();
-		});
+		List<RemoveResult> removed = personService.doInTransaction(tryCount, ops -> ops.removeByQuery(Person.class).matching(QueryCriteria.where("firstname").eq(person.getFirstname())).all());
 
 		Person fetched = operations.findById(Person.class).one(person.id());
 		assertNull(fetched);
@@ -166,9 +162,7 @@ public class CouchbaseTransactionalTemplateIntegrationTests extends JavaIntegrat
 		AtomicInteger tryCount = new AtomicInteger(0);
 		Person person = operations.insertById(Person.class).one(WalterWhite.withIdFirstname());
 
-		List<Person> found = personService.doInTransaction(tryCount, ops -> {
-			return ops.findByQuery(Person.class).matching(QueryCriteria.where("firstname").eq(person.getFirstname())).all();
-		});
+		List<Person> found = personService.doInTransaction(tryCount, ops -> ops.findByQuery(Person.class).matching(QueryCriteria.where("firstname").eq(person.getFirstname())).all());
 
 		assertEquals(1, found.size());
 	}
@@ -180,7 +174,7 @@ public class CouchbaseTransactionalTemplateIntegrationTests extends JavaIntegrat
 		AtomicReference<String> id = new AtomicReference<>();
 
 		assertThrowsWithCause(() -> {
-			personService.doInTransaction(tryCount, (ops) -> {
+			personService.doInTransaction(tryCount, ops -> {
 				ops.insertById(Person.class).one(WalterWhite);
 				id.set(WalterWhite.id());
 				throw new SimulateFailureException();
@@ -199,7 +193,7 @@ public class CouchbaseTransactionalTemplateIntegrationTests extends JavaIntegrat
 		Person person = operations.insertById(Person.class).one(WalterWhite);
 
 		assertThrowsWithCause(() -> {
-			personService.doInTransaction(tryCount, (ops) -> {
+			personService.doInTransaction(tryCount, ops -> {
 				Person p = ops.findById(Person.class).one(person.id());
 				ops.replaceById(Person.class).one(p.withFirstName("changed"));
 				throw new SimulateFailureException();
@@ -218,7 +212,7 @@ public class CouchbaseTransactionalTemplateIntegrationTests extends JavaIntegrat
 		Person person = operations.insertById(Person.class).one(WalterWhite);
 
 		assertThrowsWithCause(() -> {
-			personService.doInTransaction(tryCount, (ops) -> {
+			personService.doInTransaction(tryCount, ops -> {
 				Person p = ops.findById(Person.class).one(person.id());
 				ops.removeById(Person.class).oneEntity(p);
 				throw new SimulateFailureException();
@@ -266,9 +260,7 @@ public class CouchbaseTransactionalTemplateIntegrationTests extends JavaIntegrat
 
 	@Test
 	public void shouldRollbackAfterException() {
-		assertThrowsWithCause(() -> {
-			personService.insertThenThrow();
-		}, TransactionSystemUnambiguousException.class, SimulateFailureException.class);
+		assertThrowsWithCause(personService::insertThenThrow, TransactionSystemUnambiguousException.class, SimulateFailureException.class);
 
 		Long count = operations.findByQuery(Person.class).withConsistency(REQUEST_PLUS).count();
 		assertEquals(0, count, "should have done roll back and left 0 entries");
@@ -357,7 +349,7 @@ public class CouchbaseTransactionalTemplateIntegrationTests extends JavaIntegrat
 		AtomicInteger tryCount = new AtomicInteger();
 		Person person = operations.insertById(Person.class).one(WalterWhite);
 		assertThrowsWithCause(() -> {
-			personService.doInTransaction(tryCount, (ops) -> {
+			personService.doInTransaction(tryCount, ops -> {
 				Person p = ops.findById(Person.class).one(person.id());
 				ops.removeById(Person.class).one(p.id());
 				return p;

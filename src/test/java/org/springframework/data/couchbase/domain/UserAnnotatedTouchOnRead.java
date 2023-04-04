@@ -41,6 +41,8 @@ import java.io.Serializable;
 @Document(expiry = 1, touchOnRead = true)
 public class UserAnnotatedTouchOnRead extends User implements Serializable {
 
+	private static final long serialVersionUID = 1;
+
 	public UserAnnotatedTouchOnRead(String id, String firstname, String lastname) {
 		super(id, firstname, lastname);
 	}
