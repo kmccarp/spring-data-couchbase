@@ -16,6 +16,7 @@
 package org.springframework.data.couchbase.core;
 
 import com.couchbase.client.core.api.query.CoreQueryContext;
+import com.couchbase.client.core.api.query.CoreQueryResult;
 import com.couchbase.client.core.io.CollectionIdentifier;
 import reactor.core.publisher.Flux;
 
@@ -104,7 +105,7 @@ public class ReactiveRemoveByQueryOperationSupport implements ReactiveRemoveByQu
 					CoreQueryContext queryContext = OptionsBuilder.queryContext(pArgs.getScope(), pArgs.getCollection(), rs.bucketName());
 					return transactionContext.get().getCore()
 							.queryBlocking(statement, queryContext, opts.builder().build(), false)
-							.flatMapIterable(result -> result.collectRows()).map(row -> {
+							.flatMapIterable(CoreQueryResult::collectRows).map(row -> {
 								JsonObject json = JsonObject.fromJson(row.data());
 								return new RemoveResult(json.getString(TemplateUtils.SELECT_ID), json.getLong(TemplateUtils.SELECT_CAS),
 										Optional.empty());

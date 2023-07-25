@@ -455,10 +455,10 @@ public class QueryCriteria implements QueryCriteriaDefinition {
 				if (o[0] instanceof Object[]) {
 					value[0] = o[0];
 				} else if (o[0] instanceof JsonArray) {
-					JsonArray ja = ((JsonArray) o[0]);
+					JsonArray ja = (JsonArray) o[0];
 					value[0] = ja.toList().toArray();
 				} else if (o[0] instanceof List) {
-					List l = ((List) o[0]);
+					List l = (List) o[0];
 					value[0] = l.toArray();
 				}
 			} else {

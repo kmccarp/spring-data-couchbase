@@ -65,7 +65,7 @@ public final class OtherConverters {
 	 * @return the list of converters to register.
 	 */
 	public static Collection<Converter<?, ?>> getConvertersToRegister() {
-		List<Converter<?, ?>> converters = new ArrayList<Converter<?, ?>>();
+		List<Converter<?, ?>> converters = new ArrayList<>();
 
 		converters.add(UuidToString.INSTANCE);
 		converters.add(StringToUuid.INSTANCE);

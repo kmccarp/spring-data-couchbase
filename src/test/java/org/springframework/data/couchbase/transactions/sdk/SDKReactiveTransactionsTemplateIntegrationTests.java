@@ -101,12 +101,10 @@ public class SDKReactiveTransactionsTemplateIntegrationTests extends JavaIntegra
 			@Nullable TransactionOptions options) {
 		AtomicInteger attempts = new AtomicInteger();
 
-		TransactionResult result = couchbaseClientFactory.getCluster().reactive().transactions().run(ctx -> {
-			return TransactionalSupport.checkForTransactionInThreadLocalStorage().then(Mono.defer(() -> {
+		TransactionResult result = couchbaseClientFactory.getCluster().reactive().transactions().run(ctx -> TransactionalSupport.checkForTransactionInThreadLocalStorage().then(Mono.defer(() -> {
 				attempts.incrementAndGet();
 				return lambda.apply(ctx);
-			}));
-		}, options).block();
+			})), options).block();
 
 		assertNotInTransaction();
 
@@ -117,11 +115,7 @@ public class SDKReactiveTransactionsTemplateIntegrationTests extends JavaIntegra
 	@Test
 	public void committedInsert() {
 
-		RunResult rr = doInTransaction(ctx -> {
-			return Mono.defer(() -> {
-				return ops.insertById(Person.class).one(WalterWhite);
-			});
-		});
+		RunResult rr = doInTransaction(ctx -> Mono.defer(() -> ops.insertById(Person.class).one(WalterWhite)));
 
 		Person fetched = blocking.findById(Person.class).one(WalterWhite.id());
 		assertEquals("Walter", fetched.getFirstname());
@@ -132,11 +126,7 @@ public class SDKReactiveTransactionsTemplateIntegrationTests extends JavaIntegra
 			@Nullable TransactionOptions options) {
 		AtomicInteger attempts = new AtomicInteger();
 
-		TransactionResult result = couchbaseClientFactory.getCluster().reactive().transactions().run(ctx -> {
-			return TransactionalSupport.checkForTransactionInThreadLocalStorage().then(Mono.defer(() -> {
-				return lambda.apply(ctx);
-			}));
-		}, options).block();
+		TransactionResult result = couchbaseClientFactory.getCluster().reactive().transactions().run(ctx -> TransactionalSupport.checkForTransactionInThreadLocalStorage().then(Mono.defer(() -> lambda.apply(ctx))), options).block();
 
 		assertNotInTransaction();
 
@@ -149,12 +139,10 @@ public class SDKReactiveTransactionsTemplateIntegrationTests extends JavaIntegra
 
 		Person initial = blocking.insertById(Person.class).one(WalterWhite);
 
-		RunResult rr = doInTransaction(ctx -> {
-			return ops.findById(Person.class).one(WalterWhite.id()).flatMap(person -> {
+		RunResult rr = doInTransaction(ctx -> ops.findById(Person.class).one(WalterWhite.id()).flatMap(person -> {
 				person.setFirstname("changed");
 				return ops.replaceById(Person.class).one(person);
-			});
-		});
+			}));
 
 		Person fetched = blocking.findById(Person.class).one(initial.id());
 		assertEquals("changed", fetched.getFirstname());
@@ -166,10 +154,8 @@ public class SDKReactiveTransactionsTemplateIntegrationTests extends JavaIntegra
 	public void committedRemove() {
 		Person person = blocking.insertById(Person.class).one(WalterWhite);
 
-		RunResult rr = doInTransaction(ctx -> {
-			return ops.findById(Person.class).one(person.id())
-					.flatMap(fetched -> ops.removeById(Person.class).oneEntity(fetched));
-		});
+		RunResult rr = doInTransaction(ctx -> ops.findById(Person.class).one(person.id())
+					.flatMap(fetched -> ops.removeById(Person.class).oneEntity(fetched)));
 
 		Person fetched = blocking.findById(Person.class).one(person.id());
 		assertNull(fetched);
@@ -182,10 +168,8 @@ public class SDKReactiveTransactionsTemplateIntegrationTests extends JavaIntegra
 
 		Person person = blocking.insertById(Person.class).one(WalterWhite.withIdFirstname());
 
-		RunResult rr = doInTransaction(ctx -> {
-			return ops.removeByQuery(Person.class).withConsistency(REQUEST_PLUS)
-					.matching(QueryCriteria.where("firstname").eq(WalterWhite.id())).all().then();
-		});
+		RunResult rr = doInTransaction(ctx -> ops.removeByQuery(Person.class).withConsistency(REQUEST_PLUS)
+					.matching(QueryCriteria.where("firstname").eq(WalterWhite.id())).all().then());
 
 		Person fetched = blocking.findById(Person.class).one(person.id());
 		assertNull(fetched);
@@ -197,10 +181,8 @@ public class SDKReactiveTransactionsTemplateIntegrationTests extends JavaIntegra
 	public void committedFindByQuery() {
 		Person person = blocking.insertById(Person.class).one(WalterWhite.withIdFirstname());
 
-		RunResult rr = doInTransaction(ctx -> {
-			return ops.findByQuery(Person.class).matching(QueryCriteria.where("firstname").eq(WalterWhite.getFirstname()))
-					.all().then();
-		});
+		RunResult rr = doInTransaction(ctx -> ops.findByQuery(Person.class).matching(QueryCriteria.where("firstname").eq(WalterWhite.getFirstname()))
+					.all().then());
 
 		assertEquals(1, rr.attempts);
 	}
@@ -212,7 +194,7 @@ public class SDKReactiveTransactionsTemplateIntegrationTests extends JavaIntegra
 
 		assertThrowsWithCause(() -> doInTransaction(ctx -> {
 			attempts.incrementAndGet();
-			return ops.insertById(Person.class).one(WalterWhite).map((p) -> throwSimulateFailureException(p));
+			return ops.insertById(Person.class).one(WalterWhite).map(JavaIntegrationTests::throwSimulateFailureException);
 		}), TransactionFailedException.class, SimulateFailureException.class);
 
 		Person fetched = blocking.findById(Person.class).one(WalterWhite.id());
@@ -230,7 +212,7 @@ public class SDKReactiveTransactionsTemplateIntegrationTests extends JavaIntegra
 			attempts.incrementAndGet();
 			return ops.findById(Person.class).one(person.id()) //
 					.flatMap(p -> ops.replaceById(Person.class).one(p.withFirstName("changed"))) //
-					.map(p -> throwSimulateFailureException(p));
+					.map(JavaIntegrationTests::throwSimulateFailureException);
 		}), TransactionFailedException.class, SimulateFailureException.class);
 
 		Person fetched = blocking.findById(Person.class).one(person.id());
@@ -247,7 +229,7 @@ public class SDKReactiveTransactionsTemplateIntegrationTests extends JavaIntegra
 		assertThrowsWithCause(() -> doInTransaction(ctx -> {
 			attempts.incrementAndGet();
 			return ops.findById(Person.class).one(person.id()).flatMap(p -> ops.removeById(Person.class).oneEntity(p)) //
-					.doOnSuccess(p -> throwSimulateFailureException(p)); // remove has no result
+					.doOnSuccess(JavaIntegrationTests::throwSimulateFailureException); // remove has no result
 		}), TransactionFailedException.class, SimulateFailureException.class);
 
 		Person fetched = blocking.findById(Person.class).one(person.id());
@@ -264,7 +246,7 @@ public class SDKReactiveTransactionsTemplateIntegrationTests extends JavaIntegra
 		assertThrowsWithCause(() -> doInTransaction(ctx -> {
 			attempts.incrementAndGet();
 			return ops.removeByQuery(Person.class).matching(QueryCriteria.where("firstname").eq(person.getFirstname())).all()
-					.elementAt(0).map(p -> throwSimulateFailureException(p));
+					.elementAt(0).map(JavaIntegrationTests::throwSimulateFailureException);
 		}), TransactionFailedException.class, SimulateFailureException.class);
 
 		Person fetched = blocking.findById(Person.class).one(person.id());
@@ -281,7 +263,7 @@ public class SDKReactiveTransactionsTemplateIntegrationTests extends JavaIntegra
 		assertThrowsWithCause(() -> doInTransaction(ctx -> {
 			attempts.incrementAndGet();
 			return ops.findByQuery(Person.class).matching(QueryCriteria.where("firstname").eq(person.getFirstname())).all()
-					.elementAt(0).map(p -> throwSimulateFailureException(p));
+					.elementAt(0).map(JavaIntegrationTests::throwSimulateFailureException);
 		}), TransactionFailedException.class, SimulateFailureException.class);
 
 		assertEquals(1, attempts.get());
@@ -306,7 +288,6 @@ public class SDKReactiveTransactionsTemplateIntegrationTests extends JavaIntegra
 	@DisplayName("Entity must have CAS field during replace")
 	@Test
 	public void replaceEntityWithoutCas() {
-		;
 		PersonWithoutVersion person = blocking.insertById(PersonWithoutVersion.class)
 				.one(new PersonWithoutVersion("Walter", "White"));
 		assertThrowsWithCause(
@@ -324,9 +305,7 @@ public class SDKReactiveTransactionsTemplateIntegrationTests extends JavaIntegra
 		// switchedPerson here will have CAS=0, which will fail
 		Person switchedPerson = new Person(person.getId(), "Dave", "Reynolds");
 
-		assertThrowsWithCause(() -> doInTransaction(ctx -> {
-			return ops.replaceById(Person.class).one(switchedPerson);
-		}), TransactionFailedException.class, IllegalArgumentException.class);
+		assertThrowsWithCause(() -> doInTransaction(ctx -> ops.replaceById(Person.class).one(switchedPerson)), TransactionFailedException.class, IllegalArgumentException.class);
 
 	}
 
@@ -335,10 +314,8 @@ public class SDKReactiveTransactionsTemplateIntegrationTests extends JavaIntegra
 	public void removeEntityWithoutCas() {
 		PersonWithoutVersion person = blocking.insertById(PersonWithoutVersion.class)
 				.one(new PersonWithoutVersion("Walter", "White"));
-		assertThrowsWithCause(() -> doInTransaction(ctx -> {
-			return ops.findById(PersonWithoutVersion.class).one(person.id())
-					.flatMap(fetched -> ops.removeById(PersonWithoutVersion.class).oneEntity(fetched));
-		}), TransactionFailedException.class, IllegalArgumentException.class);
+		assertThrowsWithCause(() -> doInTransaction(ctx -> ops.findById(PersonWithoutVersion.class).one(person.id())
+					.flatMap(fetched -> ops.removeById(PersonWithoutVersion.class).oneEntity(fetched))), TransactionFailedException.class, IllegalArgumentException.class);
 
 	}
 
@@ -347,9 +324,7 @@ public class SDKReactiveTransactionsTemplateIntegrationTests extends JavaIntegra
 	public void removeEntityById() {
 		Person person = blocking.insertById(Person.class).one(WalterWhite);
 
-		assertThrowsWithCause(() -> doInTransaction(ctx -> {
-			return ops.findById(Person.class).one(person.id()).flatMap(p -> ops.removeById(Person.class).one(p.id()));
-		}), TransactionFailedException.class, IllegalArgumentException.class);
+		assertThrowsWithCause(() -> doInTransaction(ctx -> ops.findById(Person.class).one(person.id()).flatMap(p -> ops.removeById(Person.class).one(p.id()))), TransactionFailedException.class, IllegalArgumentException.class);
 
 	}
 
@@ -359,13 +334,11 @@ public class SDKReactiveTransactionsTemplateIntegrationTests extends JavaIntegra
 		Person person = blocking.insertById(Person.class).one(WalterWhite);
 		AtomicInteger attempts = new AtomicInteger();
 
-		doInTransaction(ctx -> {
-			return ops.findById(Person.class).one(person.id()).flatMap(fetched -> Mono.defer(() -> {
+		doInTransaction(ctx -> ops.findById(Person.class).one(person.id()).flatMap(fetched -> Mono.defer(() -> {
 				ReplaceLoopThread.updateOutOfTransaction(blocking, person.withFirstName("Changed externally"),
 						attempts.incrementAndGet());
 				return ops.replaceById(Person.class).one(fetched.withFirstName("Changed by transaction"));
-			}));
-		});
+			})));
 
 		Person fetched = blocking.findById(Person.class).one(person.id());
 		assertEquals("Changed by transaction", fetched.getFirstname());

@@ -74,9 +74,9 @@ import org.springframework.data.mapping.MappingException;
  */
 public class MappingCouchbaseConverterTests {
 
-	private static MappingCouchbaseConverter converter = new MappingCouchbaseConverter();
-	private static MappingCouchbaseConverter customConverter = (new Config()).mappingCouchbaseConverter();
-	private static MappingCouchbaseConverter noTypeKeyConverter = (new Config(){
+	private static final MappingCouchbaseConverter converter = new MappingCouchbaseConverter();
+	private static final MappingCouchbaseConverter customConverter = (new Config()).mappingCouchbaseConverter();
+	private static final MappingCouchbaseConverter noTypeKeyConverter = (new Config(){
 		@Override
 		public String typeKey() {
 			return "";
@@ -103,7 +103,7 @@ public class MappingCouchbaseConverterTests {
 			converter.write("hello", new CouchbaseDocument());
 		} catch (Exception e) {
 			if (!(e instanceof MappingException)
-					&& !e.getClass().getName().equals("java.lang.reflect.InaccessibleObjectException")) {
+					&& !"java.lang.reflect.InaccessibleObjectException".equals(e.getClass().getName())) {
 				throw new RuntimeException("Should have thrown MappingException or InaccessibleObjectException", e);
 			}
 		}
@@ -115,7 +115,7 @@ public class MappingCouchbaseConverterTests {
 			converter.write(true, new CouchbaseDocument());
 		} catch (Exception e) {
 			if (!(e instanceof MappingException)
-					&& !e.getClass().getName().equals("java.lang.reflect.InaccessibleObjectException")) {
+					&& !"java.lang.reflect.InaccessibleObjectException".equals(e.getClass().getName())) {
 				throw new RuntimeException("Should have thrown MappingException or InaccessibleObjectException", e);
 			}
 		}
@@ -127,7 +127,7 @@ public class MappingCouchbaseConverterTests {
 			converter.write(42, new CouchbaseDocument());
 		} catch (Exception e) {
 			if (!(e instanceof MappingException)
-					&& !e.getClass().getName().equals("java.lang.reflect.InaccessibleObjectException")) {
+					&& !"java.lang.reflect.InaccessibleObjectException".equals(e.getClass().getName())) {
 				throw new RuntimeException("Should have thrown MappingException or InaccessibleObjectException", e);
 			}
 		}
@@ -510,7 +510,7 @@ public class MappingCouchbaseConverterTests {
 
 		final String email = "foo@bar.com";
 		final Email addy = new Email(email);
-		List<Email> listOfEmails = new ArrayList<Email>();
+		List<Email> listOfEmails = new ArrayList<>();
 		listOfEmails.add(addy);
 
 		ValueEntity entity = new ValueEntity(addy, listOfEmails);
@@ -544,7 +544,7 @@ public class MappingCouchbaseConverterTests {
 
 		final String email = "foo@bar.com";
 		final Emailx addy = new Emailx(email);
-		List<Emailx> listOfEmails = new ArrayList<Emailx>();
+		List<Emailx> listOfEmails = new ArrayList<>();
 		listOfEmails.add(addy);
 
 		ValueEntityx entity = new ValueEntityx(addy, listOfEmails);
@@ -623,14 +623,14 @@ public class MappingCouchbaseConverterTests {
 		assertThat(readConverted.mapOfValues.get("val2")).isEqualTo(mapOfValues.get("val2"));
 	}
 
-	static private String toString(ChoiceFormat choiceFormat) {
+	private static String toString(ChoiceFormat choiceFormat) {
 		String limits = Arrays.stream(choiceFormat.getLimits()).mapToObj(String::valueOf).collect(Collectors.joining(","));
-		String formats = Arrays.stream(choiceFormat.getFormats()).map((o) -> String.valueOf(o))
+		String formats = Arrays.stream(choiceFormat.getFormats()).map(String::valueOf)
 				.collect(Collectors.joining(","));
 		return limits + "|" + formats;
 	}
 
-	static private ChoiceFormat fromString(String source) {
+	private static ChoiceFormat fromString(String source) {
 		String[] split = source.split("\\|");
 		double[] limits = Arrays.stream(split[0].split(",")).mapToDouble(Double::parseDouble).toArray();
 		String[] formats = split[1].split(",");
@@ -902,7 +902,7 @@ public class MappingCouchbaseConverterTests {
 	}
 
 	static class UninitializedEntity extends BaseEntity {
-		private String attr0 = null;
+		private String attr0;
 		private int attr1;
 		private Integer attr2;
 	}

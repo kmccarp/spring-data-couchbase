@@ -65,7 +65,7 @@ public class N1qlJoinResolver {
 
 		StringBuilder useLKSBuilder = new StringBuilder();
 		if (parameters.getJoinDefinition().index().length() > 0) {
-			useLKSBuilder.append("INDEX(" + parameters.getJoinDefinition().index() + ")");
+			useLKSBuilder.append("INDEX(").append(parameters.getJoinDefinition().index()).append(")");
 		}
 		String useLKS = useLKSBuilder.length() > 0 ? "USE " + useLKSBuilder.toString() + " " : "";
 
@@ -86,22 +86,25 @@ public class N1qlJoinResolver {
 
 		StringBuilder useRKSBuilder = new StringBuilder();
 		if (parameters.getJoinDefinition().rightIndex().length() > 0) {
-			useRKSBuilder.append("INDEX(" + parameters.getJoinDefinition().rightIndex() + ")");
+			useRKSBuilder.append("INDEX(").append(parameters.getJoinDefinition().rightIndex()).append(")");
 		}
 		if (!parameters.getJoinDefinition().hashside().equals(HashSide.NONE)) {
-			if (useRKSBuilder.length() > 0)
+			if (useRKSBuilder.length() > 0) {
 				useRKSBuilder.append(" ");
-			useRKSBuilder.append("HASH(" + parameters.getJoinDefinition().hashside().getValue() + ")");
+			}
+			useRKSBuilder.append("HASH(").append(parameters.getJoinDefinition().hashside().getValue()).append(")");
 		}
 		if (parameters.getJoinDefinition().keys().length > 0) {
-			if (useRKSBuilder.length() > 0)
+			if (useRKSBuilder.length() > 0) {
 				useRKSBuilder.append(" ");
+			}
 			useRKSBuilder.append("KEYS [");
 			String[] keys = parameters.getJoinDefinition().keys();
 
 			for (int i = 0; i < keys.length; i++) {
-				if (i != 0)
+				if (i != 0) {
 					useRKSBuilder.append(",");
+				}
 				useRKSBuilder.append("\"" + keys[i] + "\"");
 			}
 			useRKSBuilder.append("]");
@@ -110,15 +113,15 @@ public class N1qlJoinResolver {
 		String on = "ON " + parameters.getJoinDefinition().on().concat(" AND " + onLks).concat(" AND " + onRks);
 
 		String where = "WHERE META(lks).id=\"" + parameters.getLksId() + "\"";
-		where += ((parameters.getJoinDefinition().where().length() > 0) ? " AND " + parameters.getJoinDefinition().where()
-				: "");
+		where += (parameters.getJoinDefinition().where().length() > 0) ? " AND " + parameters.getJoinDefinition().where()
+				: "";
 
 		StringBuilder statementSb = new StringBuilder();
 		statementSb.append(selectEntity);
-		statementSb.append(" " + from);
+		statementSb.append(" ").append(from);
 		statementSb.append((useRKSBuilder.length() > 0 ? " USE " + useRKSBuilder.toString() : ""));
-		statementSb.append(" " + on);
-		statementSb.append(" " + where);
+		statementSb.append(" ").append(on);
+		statementSb.append(" ").append(where);
 		return statementSb.toString();
 	}
 
@@ -246,12 +249,12 @@ public class N1qlJoinResolver {
 		});
 	}
 
-	static public class N1qlJoinProxy implements InvocationHandler {
+	public static class N1qlJoinProxy implements InvocationHandler {
 		private final ReactiveCouchbaseTemplate reactiveTemplate;
 		private final String collectionName = null;
 		private final String scopeName = null;
 		private final N1qlJoinResolverParameters params;
-		private List<?> resolved = null;
+		private List<?> resolved;
 
 		public N1qlJoinProxy(ReactiveCouchbaseTemplate template, N1qlJoinResolverParameters params) {
 			this.reactiveTemplate = template;
@@ -268,7 +271,7 @@ public class N1qlJoinResolver {
 		}
 	}
 
-	static public class N1qlJoinResolverParameters {
+	public static class N1qlJoinResolverParameters {
 		private N1qlJoin joinDefinition;
 		private String lksId;
 		private TypeInformation<?> entityTypeInfo;

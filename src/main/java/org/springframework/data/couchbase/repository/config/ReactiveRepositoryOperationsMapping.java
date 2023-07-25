@@ -31,8 +31,8 @@ import org.springframework.util.Assert;
  */
 public class ReactiveRepositoryOperationsMapping {
 	private ReactiveCouchbaseOperations defaultOperations;
-	private Map<String, ReactiveCouchbaseOperations> byRepository = new HashMap<>();
-	private Map<String, ReactiveCouchbaseOperations> byEntity = new HashMap<>();
+	private final Map<String, ReactiveCouchbaseOperations> byRepository = new HashMap<>();
+	private final Map<String, ReactiveCouchbaseOperations> byEntity = new HashMap<>();
 
 	/**
 	 * Creates a new mapping, setting the default fallback to use by otherwise non mapped repositories.
