@@ -26,10 +26,7 @@ import org.springframework.data.couchbase.core.support.PseudoArgs;
 import org.springframework.util.Assert;
 
 import com.couchbase.client.java.ReactiveCollection;
-import com.couchbase.client.java.kv.MutationState;
-import com.couchbase.client.java.kv.ScanOptions;
-import com.couchbase.client.java.kv.ScanTerm;
-import com.couchbase.client.java.kv.ScanType;
+import com.couchbase.client.java.kv.*;
 
 public class ReactiveRangeScanOperationSupport implements ReactiveRangeScanOperation {
 
@@ -210,7 +207,7 @@ public class ReactiveRangeScanOperationSupport implements ReactiveRangeScanOpera
 			}
 
 			Flux<String> reactiveEntities = TransactionalSupport.verifyNotInTransaction("rangeScanIds")
-					.thenMany(rc.scan(scanType, buildScanOptions(pArgs.getOptions(), true)).map(result -> result.id()));
+					.thenMany(rc.scan(scanType, buildScanOptions(pArgs.getOptions(), true)).map(ScanResult::id));
 
 			return reactiveEntities.onErrorMap(throwable -> {
 				if (throwable instanceof RuntimeException) {

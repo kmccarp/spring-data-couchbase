@@ -145,7 +145,7 @@ public class UserEncrypted extends AbstractUser implements Serializable {
 
 	public List nicknames;
 
-	public Address homeAddress = null;
+	public Address homeAddress;
 	public List<AddressWithEncStreet> addresses = new ArrayList<>();
 
 	public String getLastname() {

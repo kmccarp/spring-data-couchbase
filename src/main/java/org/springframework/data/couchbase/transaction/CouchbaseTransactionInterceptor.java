@@ -52,7 +52,7 @@ public class CouchbaseTransactionInterceptor extends TransactionInterceptor
 	protected Object invokeWithinTransaction(Method method, @Nullable Class<?> targetClass,
 			final InvocationCallback invocation) throws Throwable {
 		final TransactionAttributeSource tas = getTransactionAttributeSource();
-		final TransactionAttribute txAttr = (tas != null ? tas.getTransactionAttribute(method, targetClass) : null);
+		final TransactionAttribute txAttr = tas != null ? tas.getTransactionAttribute(method, targetClass) : null;
 
 		if (getTransactionManager() instanceof CouchbaseCallbackTransactionManager) {
 			CouchbaseCallbackTransactionManager manager = (CouchbaseCallbackTransactionManager) getTransactionManager();

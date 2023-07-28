@@ -83,7 +83,7 @@ public class CouchbaseTransactionalUnsettableParametersIntegrationTests extends 
 		AtomicInteger tryCount = new AtomicInteger(0);
 
 		assertThrowsWithCause(() -> {
-			personService.doInTransaction(tryCount, (ops) -> {
+			personService.doInTransaction(tryCount, ops -> {
 				r.accept(ops);
 				return null;
 			});
@@ -95,7 +95,7 @@ public class CouchbaseTransactionalUnsettableParametersIntegrationTests extends 
 	@DisplayName("Using insertById().withDurability - the PersistTo overload - in a transaction is rejected at runtime")
 	@Test
 	public void insertWithDurability() {
-		test((ops) -> {
+		test(ops -> {
 			ops.insertById(Person.class).withDurability(PersistTo.ONE, ReplicateTo.ONE).one(WalterWhite);
 		});
 	}
@@ -103,7 +103,7 @@ public class CouchbaseTransactionalUnsettableParametersIntegrationTests extends 
 	@DisplayName("Using insertById() with Durability set via annotations in a transaction is rejected at runtime")
 	@Test
 	public void insertWithDurabilityAnnotated() {
-		test((ops) -> {
+		test(ops -> {
 			ops.insertById(PersonWithDurability.class).one(new PersonWithDurability("Walter", "White"));
 		});
 	}
@@ -111,7 +111,7 @@ public class CouchbaseTransactionalUnsettableParametersIntegrationTests extends 
 	@DisplayName("Using insertById().withExpiry in a transaction is rejected at runtime")
 	@Test
 	public void insertWithExpiry() {
-		test((ops) -> {
+		test(ops -> {
 			ops.insertById(Person.class).withExpiry(Duration.ofSeconds(3)).one(WalterWhite);
 		});
 	}
@@ -119,7 +119,7 @@ public class CouchbaseTransactionalUnsettableParametersIntegrationTests extends 
 	@DisplayName("Using insertById().withDurability(durabilityLevel) in a transaction is rejected at runtime")
 	@Test
 	public void insertWithDurability2() {
-		test((ops) -> {
+		test(ops -> {
 			ops.insertById(Person.class).withDurability(DurabilityLevel.MAJORITY).one(WalterWhite);
 		});
 	}
@@ -127,7 +127,7 @@ public class CouchbaseTransactionalUnsettableParametersIntegrationTests extends 
 	@DisplayName("Using insertById with Durability set via annotations in a transaction is rejected at runtime")
 	@Test
 	public void insertWithDurabilityAnnotated2() {
-		test((ops) -> {
+		test(ops -> {
 			ops.insertById(PersonWithDurability2.class).one(new PersonWithDurability2("Walter", "White"));
 		});
 	}
@@ -135,7 +135,7 @@ public class CouchbaseTransactionalUnsettableParametersIntegrationTests extends 
 	@DisplayName("Using insertById().withOptions in a transaction is rejected at runtime")
 	@Test
 	public void insertWithOptions() {
-		test((ops) -> {
+		test(ops -> {
 			ops.insertById(Person.class).withOptions(InsertOptions.insertOptions()).one(WalterWhite);
 		});
 	}
@@ -143,7 +143,7 @@ public class CouchbaseTransactionalUnsettableParametersIntegrationTests extends 
 	@DisplayName("Using replaceById().withDurability - the PersistTo overload - in a transaction is rejected at runtime")
 	@Test
 	public void replaceWithDurability() {
-		test((ops) -> {
+		test(ops -> {
 			ops.replaceById(Person.class).withDurability(PersistTo.ONE, ReplicateTo.ONE).one(WalterWhite);
 		});
 	}
@@ -151,7 +151,7 @@ public class CouchbaseTransactionalUnsettableParametersIntegrationTests extends 
 	@DisplayName("Using replaceById() with Durability set via annotations in a transaction is rejected at runtime")
 	@Test
 	public void replaceWithAnnotatedDurability() {
-		test((ops) -> {
+		test(ops -> {
 			ops.replaceById(PersonWithDurability.class).one(new PersonWithDurability("Walter", "White"));
 		});
 	}
@@ -159,7 +159,7 @@ public class CouchbaseTransactionalUnsettableParametersIntegrationTests extends 
 	@DisplayName("Using replaceById().withExpiry in a transaction is rejected at runtime")
 	@Test
 	public void replaceWithExpiry() {
-		test((ops) -> {
+		test(ops -> {
 			ops.replaceById(Person.class).withExpiry(Duration.ofSeconds(3)).one(WalterWhite);
 		});
 	}
@@ -167,7 +167,7 @@ public class CouchbaseTransactionalUnsettableParametersIntegrationTests extends 
 	@DisplayName("Using replaceById().withDurability(durabilityLevel) in a transaction is rejected at runtime")
 	@Test
 	public void replaceWithDurability2() {
-		test((ops) -> {
+		test(ops -> {
 			ops.replaceById(Person.class).withDurability(DurabilityLevel.MAJORITY).one(WalterWhite);
 		});
 	}
@@ -175,7 +175,7 @@ public class CouchbaseTransactionalUnsettableParametersIntegrationTests extends 
 	@DisplayName("Using replaceById() with Durability set via annotations in a transaction is rejected at runtime")
 	@Test
 	public void replaceWithAnnotatedDurability2() {
-		test((ops) -> {
+		test(ops -> {
 			ops.replaceById(PersonWithDurability2.class).one(new PersonWithDurability2("Walter", "White"));
 		});
 	}
@@ -183,7 +183,7 @@ public class CouchbaseTransactionalUnsettableParametersIntegrationTests extends 
 	@DisplayName("Using replaceById().withOptions in a transaction is rejected at runtime")
 	@Test
 	public void replaceWithOptions() {
-		test((ops) -> {
+		test(ops -> {
 			ops.replaceById(Person.class).withOptions(ReplaceOptions.replaceOptions()).one(WalterWhite);
 		});
 	}
@@ -191,7 +191,7 @@ public class CouchbaseTransactionalUnsettableParametersIntegrationTests extends 
 	@DisplayName("Using removeById().withDurability - the PersistTo overload - in a transaction is rejected at runtime")
 	@Test
 	public void removeWithDurability() {
-		test((ops) -> {
+		test(ops -> {
 			ops.removeById(Person.class).withDurability(PersistTo.ONE, ReplicateTo.ONE).oneEntity(WalterWhite);
 		});
 	}
@@ -199,7 +199,7 @@ public class CouchbaseTransactionalUnsettableParametersIntegrationTests extends 
 	@DisplayName("Using removeById() with Durability set via annotations in a transaction is rejected at runtime")
 	@Test
 	public void removeWithAnnotatedDurability() {
-		test((ops) -> {
+		test(ops -> {
 			ops.removeById(PersonWithDurability.class).oneEntity(new PersonWithDurability("Walter", "White"));
 		});
 	}
@@ -207,7 +207,7 @@ public class CouchbaseTransactionalUnsettableParametersIntegrationTests extends 
 	@DisplayName("Using removeById().withDurability(durabilityLevel) in a transaction is rejected at runtime")
 	@Test
 	public void removeWithDurability2() {
-		test((ops) -> {
+		test(ops -> {
 			ops.removeById(Person.class).withDurability(DurabilityLevel.MAJORITY).oneEntity(WalterWhite);
 		});
 	}
@@ -215,7 +215,7 @@ public class CouchbaseTransactionalUnsettableParametersIntegrationTests extends 
 	@DisplayName("Using removeById().withDurability(durabilityLevel) in a transaction is rejected at runtime")
 	@Test
 	public void removeWithAnnotatedDurability2() {
-		test((ops) -> {
+		test(ops -> {
 			ops.removeById(PersonWithDurability2.class).oneEntity(new PersonWithDurability2("Walter", "White"));
 		});
 	}
@@ -223,7 +223,7 @@ public class CouchbaseTransactionalUnsettableParametersIntegrationTests extends 
 	@DisplayName("Using removeById().withOptions in a transaction is rejected at runtime")
 	@Test
 	public void removeWithOptions() {
-		test((ops) -> {
+		test(ops -> {
 			ops.removeById(Person.class).withOptions(RemoveOptions.removeOptions()).oneEntity(WalterWhite);
 		});
 	}
@@ -231,7 +231,7 @@ public class CouchbaseTransactionalUnsettableParametersIntegrationTests extends 
 	@DisplayName("Using findById().withExpiry in a transaction is rejected at runtime")
 	@Test
 	public void findWithExpiry() {
-		test((ops) -> {
+		test(ops -> {
 			ops.replaceById(Person.class).withExpiry(Duration.ofSeconds(3)).one(WalterWhite);
 		});
 	}
@@ -239,7 +239,7 @@ public class CouchbaseTransactionalUnsettableParametersIntegrationTests extends 
 	@DisplayName("Using findById().project in a transaction is rejected at runtime")
 	@Test
 	public void findProject() {
-		test((ops) -> {
+		test(ops -> {
 			ops.findById(Person.class).project(new String[] { "someField" }).one(WalterWhite.id());
 		});
 	}
@@ -247,7 +247,7 @@ public class CouchbaseTransactionalUnsettableParametersIntegrationTests extends 
 	@DisplayName("Using findById().withOptions in a transaction is rejected at runtime")
 	@Test
 	public void findWithOptions() {
-		test((ops) -> {
+		test(ops -> {
 			ops.findById(Person.class).withOptions(GetOptions.getOptions()).one(WalterWhite.id());
 		});
 	}

@@ -26,7 +26,7 @@ import reactor.core.publisher.Mono;
  *
  * @author Graham Pople
  */
-public class TransactionTestUtil {
+public final class TransactionTestUtil {
 	private TransactionTestUtil() {}
 
 	public static void assertInTransaction() {
@@ -38,13 +38,13 @@ public class TransactionTestUtil {
 	}
 
 	public static <T> Mono<T> assertInReactiveTransaction(T... obj) {
-		return Mono.deferContextual((ctx1) ->
+		return Mono.deferContextual(ctx1 ->
 				TransactionalSupport.checkForTransactionInThreadLocalStorage()
 						.flatMap(ctx2 -> ctx2.isPresent() ? (obj.length>0 ? Mono.just(obj[0]) : Mono.empty()) : Mono.error(new RuntimeException("in transaction"))));
 	}
 
 	public static <T> Mono<T> assertNotInReactiveTransaction(T... obj) {
-		return Mono.deferContextual((ctx1) ->
+		return Mono.deferContextual(ctx1 ->
 				TransactionalSupport.checkForTransactionInThreadLocalStorage()
 						.flatMap(ctx2 -> !ctx2.isPresent() ? (obj.length>0 ? Mono.just(obj[0]) : Mono.empty()) : Mono.error(new RuntimeException("in transaction"))));
 	}

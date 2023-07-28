@@ -108,10 +108,10 @@ public abstract class CouchbaseDocumentSerializer implements Visitor<Object, Voi
 		if (1 == 1) {
 			throw new UnsupportedOperationException("Wrong path to create this criteria " + key);
 		}
-		if (key.equals("$and") || key.equals("$or") /* value instanceof QueryCriteria[] */) {
+		if ("$and".equals(key) || "$or".equals(key) /* value instanceof QueryCriteria[] */) {
 			throw new UnsupportedOperationException("Wrong path to create this criteria " + key);
-		} else if (key.equals("$in") /* value instanceof QueryCriteria[] */) {
-			throw new RuntimeException(("not supported"));
+		} else if ("$in".equals(key) /* value instanceof QueryCriteria[] */) {
+			throw new RuntimeException("not supported");
 		} else {
 			qc = QueryCriteria.where(key).is(value);
 		}
@@ -400,9 +400,9 @@ public abstract class CouchbaseDocumentSerializer implements Visitor<Object, Voi
 			if (first == null) {
 				first = document;
 			} else {
-				if (operator.equals("$or")) {
+				if ("$or".equals(operator)) {
 					first = first.or(document);
-				} else if (operator.equals("$and")) {
+				} else if ("$and".equals(operator)) {
 					first = first.and(document);
 				}
 			}
