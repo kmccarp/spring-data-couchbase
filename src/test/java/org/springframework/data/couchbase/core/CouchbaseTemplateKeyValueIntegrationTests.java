@@ -376,7 +376,7 @@ class CouchbaseTemplateKeyValueIntegrationTests extends JavaIntegrationTests {
 				User returned = null;
 
 				// occasionally gives "reactor.core.Exceptions$OverflowException: Could not emit value due to lack of requests"
-				for (int i = 1; i != 5; i++) {
+				for (int i = 1; i < 5; i++) {
 					try {
 						returned = (User) operator.one(user);
 						break;
@@ -1119,7 +1119,7 @@ class CouchbaseTemplateKeyValueIntegrationTests extends JavaIntegrationTests {
 		User inserted = null;
 
 		// occasionally gives "reactor.core.Exceptions$OverflowException: Could not emit value due to lack of requests"
-		for (int i = 1; i != 5; i++) {
+		for (int i = 1; i < 5; i++) {
 			try {
 				inserted = couchbaseTemplate.insertById(User.class).withDurability(PersistTo.ACTIVE, ReplicateTo.NONE)
 						.one(user);
@@ -1144,7 +1144,7 @@ class CouchbaseTemplateKeyValueIntegrationTests extends JavaIntegrationTests {
 		UserAnnotatedPersistTo inserted = null;
 
 		// occasionally gives "reactor.core.Exceptions$OverflowException: Could not emit value due to lack of requests"
-		for (int i = 1; i != 5; i++) {
+		for (int i = 1; i < 5; i++) {
 			try {
 				inserted = couchbaseTemplate.insertById(UserAnnotatedPersistTo.class)
 						.one(user);
@@ -1169,7 +1169,7 @@ class CouchbaseTemplateKeyValueIntegrationTests extends JavaIntegrationTests {
 		UserAnnotatedDurability inserted = null;
 
 		// occasionally gives "reactor.core.Exceptions$OverflowException: Could not emit value due to lack of requests"
-		for (int i = 1; i != 5; i++) {
+		for (int i = 1; i < 5; i++) {
 			try {
 				inserted = couchbaseTemplate.insertById(UserAnnotatedDurability.class)
 						.one(user);
@@ -1194,7 +1194,7 @@ class CouchbaseTemplateKeyValueIntegrationTests extends JavaIntegrationTests {
 		UserAnnotatedDurabilityExpression inserted = null;
 
 		// occasionally gives "reactor.core.Exceptions$OverflowException: Could not emit value due to lack of requests"
-		for (int i = 1; i != 5; i++) {
+		for (int i = 1; i < 5; i++) {
 			try {
 				inserted = couchbaseTemplate.insertById(UserAnnotatedDurabilityExpression.class)
 						.one(user);
