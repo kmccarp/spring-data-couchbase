@@ -127,11 +127,9 @@ public class StringQuery extends Query {
 			typeValue = alias.toString();
 		}
 		// there are no options for distinct and fields for @Query
-		StringBasedN1qlQueryParser sbnqp = new StringBasedN1qlQueryParser(inlineN1qlQuery, queryMethod, bucketName,
+		return new StringBasedN1qlQueryParser(inlineN1qlQuery, queryMethod, bucketName,
 				scopeName, collectionName, converter, typeKey, typeValue, parameterAccessor, new SpelExpressionParser(),
 				evaluationContextProvider);
-
-		return sbnqp;
 	}
 
 	@Override

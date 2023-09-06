@@ -33,9 +33,9 @@ import org.springframework.data.mapping.PersistentProperty;
 public class JsonValueConverter
 		implements PropertyValueConverter<Object, Object, ValueConversionContext<? extends PersistentProperty<?>>> {
 
-	static protected final Map<Class<?>, Method> valueMethodCache = new ConcurrentHashMap<>();
-	static protected final Map<Class<?>, Constructor<?>> creatorMethodCache = new ConcurrentHashMap<>();
-	static private final ConverterHasNoConversion CONVERTER_HAS_NO_CONVERSION = new ConverterHasNoConversion();
+	protected static final Map<Class<?>, Method> valueMethodCache = new ConcurrentHashMap<>();
+	protected static final Map<Class<?>, Constructor<?>> creatorMethodCache = new ConcurrentHashMap<>();
+	private static final ConverterHasNoConversion CONVERTER_HAS_NO_CONVERSION = new ConverterHasNoConversion();
 
 	@Override
 	public Object read(Object value, ValueConversionContext<? extends PersistentProperty<?>> context) {

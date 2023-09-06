@@ -102,7 +102,7 @@ public class Util {
 
 	public static <T> Pair<List<T>, List<T>> comprises(Iterable<T> source, T... airlines) {
 		List<T> unexpected = new LinkedList<>();
-		List<T> missing = new LinkedList<T>();
+		List<T> missing = new LinkedList<>();
 		source.forEach(unexpected::add);
 		for (T t : airlines) {
 			if (!unexpected.contains(t)) {
@@ -131,7 +131,7 @@ public class Util {
 		List<T> expected = new LinkedList<>(Arrays.asList(allAirlines));
 		expected.removeAll(Arrays.asList(notAirlines));
 		List<T> unexpected = new LinkedList<>();
-		List<T> missing = new LinkedList<T>();
+		List<T> missing = new LinkedList<>();
 		source.forEach(unexpected::add);// initially, everything returned is unexpected
 		for (T t : expected) {
 			if (!unexpected.contains(t)) {

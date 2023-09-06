@@ -76,9 +76,7 @@ public class SDKReactiveTransactionsNonAllowableOperationsIntegrationTests exten
 
 		assertThrowsWithCause(() -> {
 			couchbaseClientFactory.getCluster().reactive().transactions().run(ignored -> {
-				return personService.doInService(tryCount, (ops) -> {
-					return r.apply(ops);
-				});
+				return personService.doInService(tryCount, r::apply);
 			}).block();
 		}, TransactionFailedException.class, IllegalArgumentException.class);
 
@@ -88,33 +86,25 @@ public class SDKReactiveTransactionsNonAllowableOperationsIntegrationTests exten
 	@DisplayName("Using existsById() in a transaction is rejected at runtime")
 	@Test
 	public void existsById() {
-		test((ops) -> {
-			return ops.existsById(Person.class).one(WalterWhite.id());
-		});
+		test(ops -> ops.existsById(Person.class).one(WalterWhite.id()));
 	}
 
 	@DisplayName("Using findByAnalytics() in a transaction is rejected at runtime")
 	@Test
 	public void findByAnalytics() {
-		test((ops) -> {
-			return ops.findByAnalytics(Person.class).one();
-		});
+		test(ops -> ops.findByAnalytics(Person.class).one());
 	}
 
 	@DisplayName("Using findFromReplicasById() in a transaction is rejected at runtime")
 	@Test
 	public void findFromReplicasById() {
-		test((ops) -> {
-			return ops.findFromReplicasById(Person.class).any(WalterWhite.id());
-		});
+		test(ops -> ops.findFromReplicasById(Person.class).any(WalterWhite.id()));
 	}
 
 	@DisplayName("Using upsertById() in a transaction is rejected at runtime")
 	@Test
 	public void upsertById() {
-		test((ops) -> {
-			return ops.upsertById(Person.class).one(WalterWhite);
-		});
+		test(ops -> ops.upsertById(Person.class).one(WalterWhite));
 	}
 
 	// This is intentionally not a @Transactional service

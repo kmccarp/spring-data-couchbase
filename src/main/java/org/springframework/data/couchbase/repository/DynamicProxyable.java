@@ -50,9 +50,8 @@ public interface DynamicProxyable<REPO> {
 	 */
 	@SuppressWarnings("unchecked")
 	default REPO withOptions(CommonOptions<?> options) {
-		REPO proxyInstance = (REPO) Proxy.newProxyInstance(this.getClass().getClassLoader(),
+		return (REPO) Proxy.newProxyInstance(this.getClass().getClassLoader(),
 				this.getClass().getInterfaces(), new DynamicInvocationHandler(this, options, null, (String) null));
-		return proxyInstance;
 	}
 
 	/**
@@ -60,9 +59,8 @@ public interface DynamicProxyable<REPO> {
 	 */
 	@SuppressWarnings("unchecked")
 	default REPO withScope(String scope) {
-		REPO proxyInstance = (REPO) Proxy.newProxyInstance(this.getClass().getClassLoader(),
+		return (REPO) Proxy.newProxyInstance(this.getClass().getClassLoader(),
 				this.getClass().getInterfaces(), new DynamicInvocationHandler<>(this, null, null, scope));
-		return proxyInstance;
 	}
 
 	/**
@@ -70,9 +68,8 @@ public interface DynamicProxyable<REPO> {
 	 */
 	@SuppressWarnings("unchecked")
 	default REPO withCollection(String collection) {
-		REPO proxyInstance = (REPO) Proxy.newProxyInstance(this.getClass().getClassLoader(),
+		return (REPO) Proxy.newProxyInstance(this.getClass().getClassLoader(),
 				this.getClass().getInterfaces(), new DynamicInvocationHandler<>(this, null, collection, null));
-		return proxyInstance;
 	}
 
 }

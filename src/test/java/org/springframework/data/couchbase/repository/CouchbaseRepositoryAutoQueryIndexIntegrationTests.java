@@ -53,7 +53,7 @@ public class CouchbaseRepositoryAutoQueryIndexIntegrationTests extends ClusterAw
 	void createsSingleFieldIndex() {
 		// This failed once against Capella.  Not sure why.
 		Optional<QueryIndex> foundIndex = cluster.queryIndexes().getAllIndexes(bucketName()).stream()
-				.filter(i -> i.name().equals("idx_airline_name")).findFirst();
+				.filter(i -> "idx_airline_name".equals(i.name())).findFirst();
 
 		assertTrue(foundIndex.isPresent());
 		assertTrue(foundIndex.get().condition().get().contains("_class"));
@@ -62,7 +62,7 @@ public class CouchbaseRepositoryAutoQueryIndexIntegrationTests extends ClusterAw
 	@Test
 	void createsCompositeIndex() {
 		Optional<QueryIndex> foundIndex = cluster.queryIndexes().getAllIndexes(bucketName()).stream()
-				.filter(i -> i.name().equals("idx_airline_id_name")).findFirst();
+				.filter(i -> "idx_airline_id_name".equals(i.name())).findFirst();
 
 		assertTrue(foundIndex.isPresent());
 		assertTrue(foundIndex.get().condition().get().contains("_class"));
@@ -71,7 +71,7 @@ public class CouchbaseRepositoryAutoQueryIndexIntegrationTests extends ClusterAw
 	@Test
 	void createsCompositeIndexWithPath() {
 		Optional<QueryIndex> foundIndex = cluster.queryIndexes().getAllIndexes(bucketName()).stream()
-				.filter(i -> i.name().equals("idx_airline_id_something_name")).findFirst();
+				.filter(i -> "idx_airline_id_something_name".equals(i.name())).findFirst();
 
 		assertTrue(foundIndex.isPresent());
 		assertTrue(foundIndex.get().condition().get().contains("_class"));
