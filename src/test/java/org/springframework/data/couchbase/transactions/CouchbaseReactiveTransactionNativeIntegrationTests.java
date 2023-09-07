@@ -100,7 +100,7 @@ public class CouchbaseReactiveTransactionNativeIntegrationTests extends JavaInte
 	@Test
 	public void replacePersonTemplate() {
 		Person person = rxCBTmpl.insertById(Person.class).inCollection(cName).one(WalterWhite).block();
-		Flux<Person> result = txOperator.execute((ctx) -> rxCBTmpl.findById(Person.class).one(person.id())
+		Flux<Person> result = txOperator.execute(ctx -> rxCBTmpl.findById(Person.class).one(person.id())
 				.flatMap(p -> rxCBTmpl.replaceById(Person.class).one(p.withFirstName("Walt"))));
 		result.blockLast();
 		Person pFound = rxCBTmpl.findById(Person.class).inCollection(cName).one(person.id()).block();
@@ -110,9 +110,9 @@ public class CouchbaseReactiveTransactionNativeIntegrationTests extends JavaInte
 	@Test
 	public void replacePersonRbTemplate() {
 		Person person = rxCBTmpl.insertById(Person.class).inCollection(cName).one(WalterWhite).block();
-		Flux<Person> result = txOperator.execute((ctx) -> rxCBTmpl.findById(Person.class).one(person.id())
+		Flux<Person> result = txOperator.execute(ctx -> rxCBTmpl.findById(Person.class).one(person.id())
 				.flatMap(p -> rxCBTmpl.replaceById(Person.class).one(p.withFirstName("Walt")))
-				.map(it -> throwSimulateFailureException(it)));
+				.map(JavaIntegrationTests::throwSimulateFailureException));
 		assertThrowsWithCause(result::blockLast, TransactionSystemUnambiguousException.class,
 				SimulateFailureException.class);
 		Person pFound = rxCBTmpl.findById(Person.class).inCollection(cName).one(person.id()).block();
@@ -122,7 +122,7 @@ public class CouchbaseReactiveTransactionNativeIntegrationTests extends JavaInte
 	@Test
 	public void insertPersonTemplate() {
 		Person person = WalterWhite;
-		Flux<Person> result = txOperator.execute((ctx) -> rxCBTmpl.insertById(Person.class).one(person)
+		Flux<Person> result = txOperator.execute(ctx -> rxCBTmpl.insertById(Person.class).one(person)
 				.flatMap(p -> rxCBTmpl.replaceById(Person.class).one(p.withFirstName("Walt"))));
 		result.blockLast();
 		Person pFound = rxCBTmpl.findById(Person.class).inCollection(cName).one(person.id()).block();
@@ -132,9 +132,9 @@ public class CouchbaseReactiveTransactionNativeIntegrationTests extends JavaInte
 	@Test
 	public void insertPersonRbTemplate() {
 		Person person = WalterWhite;
-		Flux<Person> result = txOperator.execute((ctx) -> rxCBTmpl.insertById(Person.class).one(person)
+		Flux<Person> result = txOperator.execute(ctx -> rxCBTmpl.insertById(Person.class).one(person)
 				.flatMap(p -> rxCBTmpl.replaceById(Person.class).one(p.withFirstName("Walt")))
-				.map(it -> throwSimulateFailureException(it)));
+				.map(JavaIntegrationTests::throwSimulateFailureException));
 		assertThrowsWithCause(result::blockLast, TransactionSystemUnambiguousException.class,
 				SimulateFailureException.class);
 		Person pFound = rxCBTmpl.findById(Person.class).inCollection(cName).one(person.id()).block();
@@ -144,7 +144,7 @@ public class CouchbaseReactiveTransactionNativeIntegrationTests extends JavaInte
 	@Test
 	public void replacePersonRbRepo() {
 		Person person = rxCBTmpl.insertById(Person.class).inCollection(cName).one(WalterWhite).block();
-		Flux<Person> result = txOperator.execute((ctx) -> rxRepo.withCollection(cName).findById(person.id())
+		Flux<Person> result = txOperator.execute(ctx -> rxRepo.withCollection(cName).findById(person.id())
 				.flatMap(p -> rxRepo.withCollection(cName).save(p.withFirstName("Walt")))
 				.flatMap(it -> Mono.error(new SimulateFailureException())));
 		assertThrowsWithCause(result::blockLast, TransactionSystemUnambiguousException.class,
@@ -156,8 +156,8 @@ public class CouchbaseReactiveTransactionNativeIntegrationTests extends JavaInte
 	@Test
 	public void insertPersonRbRepo() {
 		Person person = WalterWhite;
-		Flux<Person> result = txOperator.execute((ctx) -> rxRepo.withCollection(cName).save(person) // insert
-				.map(it -> throwSimulateFailureException(it)));
+		Flux<Person> result = txOperator.execute(ctx -> rxRepo.withCollection(cName).save(person) // insert
+				.map(JavaIntegrationTests::throwSimulateFailureException));
 		assertThrowsWithCause(result::blockLast, TransactionSystemUnambiguousException.class,
 				SimulateFailureException.class);
 		Person pFound = rxRepo.withCollection(cName).findById(person.id()).block();
@@ -167,7 +167,7 @@ public class CouchbaseReactiveTransactionNativeIntegrationTests extends JavaInte
 	@Test
 	public void insertPersonRepo() {
 		Person person = WalterWhite;
-		Flux<Person> result = txOperator.execute((ctx) -> rxRepo.withCollection(cName).save(person) // insert
+		Flux<Person> result = txOperator.execute(ctx -> rxRepo.withCollection(cName).save(person) // insert
 				.flatMap(p -> rxRepo.withCollection(cName).save(p.withFirstName("Walt"))));
 		result.blockLast();
 		Person pFound = rxRepo.withCollection(cName).findById(person.id()).block();
@@ -210,7 +210,7 @@ public class CouchbaseReactiveTransactionNativeIntegrationTests extends JavaInte
 	@Test
 	public void insertReplacePersonsCBTransactionsRxTmpl() {
 		Person person = WalterWhite;
-		Flux<Person> result = txOperator.execute((ctx) -> rxCBTmpl.insertById(Person.class).inCollection(cName).one(person)
+		Flux<Person> result = txOperator.execute(ctx -> rxCBTmpl.insertById(Person.class).inCollection(cName).one(person)
 				.flatMap(pInsert -> rxCBTmpl.replaceById(Person.class).inCollection(cName).one(pInsert.withFirstName("Walt"))));
 		result.blockLast();
 		Person pFound = rxCBTmpl.findById(Person.class).inCollection(cName).one(person.id()).block();
@@ -230,5 +230,5 @@ public class CouchbaseReactiveTransactionNativeIntegrationTests extends JavaInte
 				.as(txOperator::transactional);
 	}
 
-    static public class TransactionsConfig extends org.springframework.data.couchbase.transactions.TransactionsConfig {}
+    public static class TransactionsConfig extends org.springframework.data.couchbase.transactions.TransactionsConfig {}
 }

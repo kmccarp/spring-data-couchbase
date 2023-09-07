@@ -105,15 +105,13 @@ public class ReactiveMutateInByIdOperationSupport implements ReactiveMutateInByI
 			}
 			
 			Mono<T> reactiveEntity = TransactionalSupport.verifyNotInTransaction("mutateInById")
-					.then(support.encodeEntity(object)).flatMap(converted -> {
-						return Mono
+					.then(support.encodeEntity(object)).flatMap(converted -> Mono
 								.just(template.getCouchbaseClientFactory().withScope(pArgs.getScope())
 										.getCollection(pArgs.getCollection()))
 								.flatMap(collection -> collection.reactive()
 										.mutateIn(converted.getId().toString(), getMutations(converted), buildMutateInOptions(pArgs.getOptions(), object, converted))
 										.flatMap(
-												result -> support.applyResult(object, converted, converted.getId(), result.cas(), null, null)));
-					});
+												result -> support.applyResult(object, converted, converted.getId(), result.cas(), null, null))));
 
 			return reactiveEntity.onErrorMap(throwable -> {
 				if (throwable instanceof RuntimeException) {

@@ -97,7 +97,7 @@ public class CouchbaseRepositoryQuerydslIntegrationTests extends JavaIntegration
 
     @Autowired CouchbaseTemplate couchbaseTemplate;
 
-    SpringDataCouchbaseSerializer serializer = null;
+    SpringDataCouchbaseSerializer serializer;
 
     @BeforeEach
     public void beforeEach() {
@@ -106,7 +106,7 @@ public class CouchbaseRepositoryQuerydslIntegrationTests extends JavaIntegration
     }
 
 	@BeforeAll
-	static public void beforeAll() {
+	public static void beforeAll() {
 		callSuperBeforeAll(new Object() {});
 		ApplicationContext ac = new AnnotationConfigApplicationContext(
 				CouchbaseRepositoryQuerydslIntegrationTests.Config.class);
@@ -119,7 +119,7 @@ public class CouchbaseRepositoryQuerydslIntegrationTests extends JavaIntegration
 	}
 
 	@AfterAll
-	static public void afterAll() {
+	public static void afterAll() {
 		ApplicationContext ac = new AnnotationConfigApplicationContext(
 				CouchbaseRepositoryQuerydslIntegrationTests.Config.class);
 		CouchbaseTemplate template = (CouchbaseTemplate) ac.getBean("couchbaseTemplate");

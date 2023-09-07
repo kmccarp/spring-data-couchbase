@@ -116,7 +116,7 @@ public class CouchbaseDocument implements CouchbaseStorable {
 	 * @return
 	 */
 	public final TreeMap<String, Object> export() {
-		TreeMap<String, Object> toExport = new TreeMap<String, Object>(content);
+		TreeMap<String, Object> toExport = new TreeMap<>(content);
 		for (Map.Entry<String, Object> entry : content.entrySet()) {
 			if (entry.getValue() instanceof CouchbaseDocument) {
 				toExport.put(entry.getKey(), ((CouchbaseDocument) entry.getValue()).export());

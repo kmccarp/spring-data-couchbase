@@ -360,7 +360,7 @@ class QueryCriteriaTests {
 		return sb.toString();
 	}
 
-	private static Config config = new Config();
+	private static final Config config = new Config();
 	private static CouchbaseMappingContext mappingContext;
 	static {
 		try {
@@ -370,7 +370,7 @@ class QueryCriteriaTests {
 		}
 	}
 
-	private static MappingCouchbaseConverter converter = (new Config()).mappingCouchbaseConverter(mappingContext,(CouchbaseCustomConversions)config.customConversions());
+	private static final MappingCouchbaseConverter converter = (new Config()).mappingCouchbaseConverter(mappingContext, (CouchbaseCustomConversions) config.customConversions());
 	Object convert(Object e){
 		Object o = converter.convertForWriteIfNeeded(e);
 		if(o instanceof String){

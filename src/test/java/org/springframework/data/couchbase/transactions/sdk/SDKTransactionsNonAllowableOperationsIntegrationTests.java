@@ -75,7 +75,7 @@ public class SDKTransactionsNonAllowableOperationsIntegrationTests extends JavaI
 
 		assertThrowsWithCause(() -> {
 			couchbaseClientFactory.getCluster().transactions().run(ignored -> {
-				personService.doInService(tryCount, (ops) -> {
+				personService.doInService(tryCount, ops -> {
 					r.accept(ops);
 					return null;
 				});
@@ -88,7 +88,7 @@ public class SDKTransactionsNonAllowableOperationsIntegrationTests extends JavaI
 	@DisplayName("Using existsById() in a transaction is rejected at runtime")
 	@Test
 	public void existsById() {
-		test((ops) -> {
+		test(ops -> {
 			ops.existsById(Person.class).one(WalterWhite.id());
 		});
 	}
@@ -96,7 +96,7 @@ public class SDKTransactionsNonAllowableOperationsIntegrationTests extends JavaI
 	@DisplayName("Using findByAnalytics() in a transaction is rejected at runtime")
 	@Test
 	public void findByAnalytics() {
-		test((ops) -> {
+		test(ops -> {
 			ops.findByAnalytics(Person.class).one();
 		});
 	}
@@ -104,7 +104,7 @@ public class SDKTransactionsNonAllowableOperationsIntegrationTests extends JavaI
 	@DisplayName("Using findFromReplicasById() in a transaction is rejected at runtime")
 	@Test
 	public void findFromReplicasById() {
-		test((ops) -> {
+		test(ops -> {
 			ops.findFromReplicasById(Person.class).any(WalterWhite.id());
 		});
 	}
@@ -112,7 +112,7 @@ public class SDKTransactionsNonAllowableOperationsIntegrationTests extends JavaI
 	@DisplayName("Using upsertById() in a transaction is rejected at runtime")
 	@Test
 	public void upsertById() {
-		test((ops) -> {
+		test(ops -> {
 			ops.upsertById(Person.class).one(WalterWhite);
 		});
 	}

@@ -100,7 +100,7 @@ public class CouchbaseTransactionalOperatorTemplateIntegrationTests extends Java
 		TransactionalOperator operator = CouchbaseTransactionalOperator.create(manager);
 		AtomicInteger attempts = new AtomicInteger();
 
-		operator.transactional(Mono.fromRunnable(() -> attempts.incrementAndGet()).then(lambda.get())).block();
+		operator.transactional(Mono.fromRunnable(attempts::incrementAndGet).then(lambda.get())).block();
 
 		assertNotInTransaction();
 
@@ -113,11 +113,7 @@ public class CouchbaseTransactionalOperatorTemplateIntegrationTests extends Java
 		CouchbaseCallbackTransactionManager manager = new CouchbaseCallbackTransactionManager(couchbaseClientFactory);
 		TransactionalOperator operator = CouchbaseTransactionalOperator.create(manager);
 
-		operator.execute(v -> {
-			return Mono.defer(() -> {
-				return ops.insertById(Person.class).one(WalterWhite);
-			});
-		}).blockLast();
+		operator.execute(v -> Mono.defer(() -> ops.insertById(Person.class).one(WalterWhite))).blockLast();
 
 		Person fetched = blocking.findById(Person.class).one(WalterWhite.id());
 		assertEquals(WalterWhite.getFirstname(), fetched.getFirstname());
@@ -129,9 +125,7 @@ public class CouchbaseTransactionalOperatorTemplateIntegrationTests extends Java
 		CouchbaseCallbackTransactionManager manager = new CouchbaseCallbackTransactionManager(couchbaseClientFactory);
 		TransactionalOperator operator = CouchbaseTransactionalOperator.create(manager);
 
-		Flux<Person> flux = Flux.defer(() -> {
-			return ops.insertById(Person.class).one(WalterWhite);
-		});
+		Flux<Person> flux = Flux.defer(() -> ops.insertById(Person.class).one(WalterWhite));
 
 		operator.transactional(flux).blockLast();
 
@@ -143,11 +137,7 @@ public class CouchbaseTransactionalOperatorTemplateIntegrationTests extends Java
 	@Test
 	public void committedInsert() {
 
-		RunResult rr = doMonoInTransaction(() -> {
-			return Mono.defer(() -> {
-				return ops.insertById(Person.class).one(WalterWhite);
-			});
-		});
+		RunResult rr = doMonoInTransaction(() -> Mono.defer(() -> ops.insertById(Person.class).one(WalterWhite)));
 
 		Person fetched = blocking.findById(Person.class).one(WalterWhite.id());
 		assertEquals(WalterWhite.getFirstname(), fetched.getFirstname());
@@ -159,12 +149,10 @@ public class CouchbaseTransactionalOperatorTemplateIntegrationTests extends Java
 	public void committedReplace() {
 		Person p = blocking.insertById(Person.class).one(WalterWhite);
 
-		RunResult rr = doMonoInTransaction(() -> {
-			return ops.findById(Person.class).one(WalterWhite.id()).flatMap(person -> {
+		RunResult rr = doMonoInTransaction(() -> ops.findById(Person.class).one(WalterWhite.id()).flatMap(person -> {
 				person.setFirstname("changed");
 				return ops.replaceById(Person.class).one(person);
-			});
-		});
+			}));
 
 		Person fetched = blocking.findById(Person.class).one(WalterWhite.id());
 		assertEquals("changed", fetched.getFirstname());
@@ -177,10 +165,8 @@ public class CouchbaseTransactionalOperatorTemplateIntegrationTests extends Java
 
 		Person person = blocking.insertById(Person.class).one(WalterWhite);
 
-		RunResult rr = doMonoInTransaction(() -> {
-			return ops.findById(Person.class).one(person.id())
-					.flatMap(fetched -> ops.removeById(Person.class).oneEntity(fetched));
-		});
+		RunResult rr = doMonoInTransaction(() -> ops.findById(Person.class).one(person.id())
+					.flatMap(fetched -> ops.removeById(Person.class).oneEntity(fetched)));
 
 		Person fetched = blocking.findById(Person.class).one(person.id());
 		assertNull(fetched);
@@ -192,10 +178,8 @@ public class CouchbaseTransactionalOperatorTemplateIntegrationTests extends Java
 	public void committedRemoveByQuery() {
 		Person person = blocking.insertById(Person.class).one(WalterWhite.withIdFirstname());
 
-		RunResult rr = doMonoInTransaction(() -> {
-			return ops.removeByQuery(Person.class).withConsistency(REQUEST_PLUS)
-					.matching(QueryCriteria.where("firstname").eq(person.id())).all().next();
-		});
+		RunResult rr = doMonoInTransaction(() -> ops.removeByQuery(Person.class).withConsistency(REQUEST_PLUS)
+					.matching(QueryCriteria.where("firstname").eq(person.id())).all().next());
 
 		Person fetched = blocking.findById(Person.class).one(person.id());
 		assertNull(fetched);
@@ -207,10 +191,8 @@ public class CouchbaseTransactionalOperatorTemplateIntegrationTests extends Java
 	public void committedFindByQuery() {
 		Person person = blocking.insertById(Person.class).one(WalterWhite.withIdFirstname());
 
-		RunResult rr = doMonoInTransaction(() -> {
-			return ops.findByQuery(Person.class).withConsistency(REQUEST_PLUS)
-					.matching(QueryCriteria.where("firstname").eq(person.id())).all().next();
-		});
+		RunResult rr = doMonoInTransaction(() -> ops.findByQuery(Person.class).withConsistency(REQUEST_PLUS)
+					.matching(QueryCriteria.where("firstname").eq(person.id())).all().next());
 
 		assertEquals(1, rr.attempts);
 	}
@@ -222,7 +204,7 @@ public class CouchbaseTransactionalOperatorTemplateIntegrationTests extends Java
 
 		assertThrowsWithCause(() -> doMonoInTransaction(() -> {
 			attempts.incrementAndGet();
-			return ops.insertById(Person.class).one(WalterWhite).map((p) -> throwSimulateFailureException(p));
+			return ops.insertById(Person.class).one(WalterWhite).map(JavaIntegrationTests::throwSimulateFailureException);
 		}), TransactionSystemUnambiguousException.class, SimulateFailureException.class);
 
 		Person fetched = blocking.findById(Person.class).one(WalterWhite.toString());
@@ -240,7 +222,7 @@ public class CouchbaseTransactionalOperatorTemplateIntegrationTests extends Java
 			attempts.incrementAndGet();
 			return ops.findById(Person.class).one(person.id()) //
 					.flatMap(p -> ops.replaceById(Person.class).one(p.withFirstName("changed"))) //
-					.map(p -> throwSimulateFailureException(p));
+					.map(JavaIntegrationTests::throwSimulateFailureException);
 		}), TransactionSystemUnambiguousException.class, SimulateFailureException.class);
 
 		Person fetched = blocking.findById(Person.class).one(person.id());
@@ -257,7 +239,7 @@ public class CouchbaseTransactionalOperatorTemplateIntegrationTests extends Java
 		assertThrowsWithCause(() -> doMonoInTransaction(() -> {
 			attempts.incrementAndGet();
 			return ops.findById(Person.class).one(person.id()).flatMap(p -> ops.removeById(Person.class).oneEntity(p)) //
-					.doOnSuccess(p -> throwSimulateFailureException(p)); // remove has no result
+					.doOnSuccess(JavaIntegrationTests::throwSimulateFailureException); // remove has no result
 		}), TransactionSystemUnambiguousException.class, SimulateFailureException.class);
 
 		Person fetched = blocking.findById(Person.class).one(person.id());
@@ -274,7 +256,7 @@ public class CouchbaseTransactionalOperatorTemplateIntegrationTests extends Java
 		assertThrowsWithCause(() -> doMonoInTransaction(() -> {
 			attempts.incrementAndGet();
 			return ops.removeByQuery(Person.class).matching(QueryCriteria.where("firstname").eq(person.getFirstname())).all()
-					.elementAt(0).map(p -> throwSimulateFailureException(p));
+					.elementAt(0).map(JavaIntegrationTests::throwSimulateFailureException);
 		}), TransactionSystemUnambiguousException.class, SimulateFailureException.class);
 
 		Person fetched = blocking.findById(Person.class).one(person.id());
@@ -291,7 +273,7 @@ public class CouchbaseTransactionalOperatorTemplateIntegrationTests extends Java
 		assertThrowsWithCause(() -> doMonoInTransaction(() -> {
 			attempts.incrementAndGet();
 			return ops.findByQuery(Person.class).matching(QueryCriteria.where("firstname").eq(person.getFirstname())).all()
-					.elementAt(0).map(p -> throwSimulateFailureException(p));
+					.elementAt(0).map(JavaIntegrationTests::throwSimulateFailureException);
 		}), TransactionSystemUnambiguousException.class, SimulateFailureException.class);
 
 		assertEquals(1, attempts.get());
@@ -309,8 +291,7 @@ public class CouchbaseTransactionalOperatorTemplateIntegrationTests extends Java
 			blocking.replaceById(Person.class).one(fetched.withFirstName("Changed externally"));
 		});
 
-		doMonoInTransaction(() -> {
-			return ops.findById(Person.class).one(person.id()).flatMap(fetched -> Mono.defer(() -> {
+		doMonoInTransaction(() -> ops.findById(Person.class).one(person.id()).flatMap(fetched -> Mono.defer(() -> {
 
 				if (attempts.incrementAndGet() == 1) {
 					forceCASMismatch.start();
@@ -321,8 +302,7 @@ public class CouchbaseTransactionalOperatorTemplateIntegrationTests extends Java
 					}
 				}
 				return ops.replaceById(Person.class).one(fetched.withFirstName("Changed by transaction"));
-			}));
-		});
+			})));
 
 		Person fetched = blocking.findById(Person.class).one(person.id());
 		assertEquals("Changed by transaction", fetched.getFirstname());
