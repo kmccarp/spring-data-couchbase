@@ -56,7 +56,7 @@ public abstract class AbstractCouchbaseQueryDSL<Q extends AbstractCouchbaseQuery
 		this.serializer = serializer;
 		@SuppressWarnings("unchecked") // Q is this plus subclass
 		Q query = (Q) this;
-		this.queryMixin = new QueryMixin<Q>(query, new DefaultQueryMetadata(), false);
+		this.queryMixin = new QueryMixin<>(query, new DefaultQueryMetadata(), false);
 	}
 
 	/**

@@ -221,7 +221,7 @@ public class JavaIntegrationTests extends ClusterAwareIntegrationTests {
 		Util.waitUntilCondition(() -> {
 			PingResult pingResult = bucket.ping(PingOptions.pingOptions().serviceTypes(Collections.singleton(serviceType)));
 
-			return pingResult.endpoints().containsKey(serviceType) && pingResult.endpoints().get(serviceType).size() > 0
+			return pingResult.endpoints().containsKey(serviceType) && !pingResult.endpoints().get(serviceType).isEmpty()
 					&& pingResult.endpoints().get(serviceType).get(0).state() == PingState.OK;
 		});
 	}
@@ -280,9 +280,9 @@ public class JavaIntegrationTests extends ClusterAwareIntegrationTests {
 		String keyspace = "default:`" + bucketName + "`.`" + scopeName + "`.`" + collectionName + "`";
 		String statement = "CREATE PRIMARY INDEX ";
 		if (indexName != null) {
-			statement += (indexName) + " ";
+			statement += indexName + " ";
 		}
-		statement += "ON " + (keyspace); // do not quote, this might be "default:bucketName.scopeName.collectionName"
+		statement += "ON " + keyspace; // do not quote, this might be "default:bucketName.scopeName.collectionName"
 
 		return exec(cluster, false, statement, builtOpts.with(), builtOpts).exceptionally(t -> {
 			if (builtOpts.ignoreIfExists() && hasCause(t, IndexExistsException.class)) {
@@ -321,7 +321,7 @@ public class JavaIntegrationTests extends ClusterAwareIntegrationTests {
 
 	private static RuntimeException translateException(Throwable t) {
 		if (t instanceof QueryException) {
-			final QueryException e = ((QueryException) t);
+			final QueryException e = (QueryException) t;
 
 			for (Map.Entry<Predicate<QueryException>, Function<QueryException, ? extends QueryException>> entry : errorMessageMap
 					.entrySet()) {

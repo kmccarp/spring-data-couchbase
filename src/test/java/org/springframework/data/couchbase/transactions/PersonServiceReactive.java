@@ -54,7 +54,7 @@ class PersonServiceReactive {
 	@Transactional
 	public Mono<Person> savePersonErrors(Person person) {
 		return personOperationsRx.insertById(Person.class).one(person) //
-				.<Person> flatMap(it -> Mono.error(new SimulateFailureException()));
+				. flatMap(it -> Mono.error(new SimulateFailureException()));
 	}
 
 	@Transactional
@@ -102,7 +102,7 @@ class PersonServiceReactive {
 						personOperationsRx.save(person),
 						personOperationsRx
 								.save(new CouchbasePersonTransactionReactiveIntegrationTests.EventLog(new ObjectId(), "afterInsert"))) //
-				.<Void> flatMap(it -> Mono.error(new SimulateFailureException()));
+				. flatMap(it -> Mono.error(new SimulateFailureException()));
 	}
 
 	@Transactional

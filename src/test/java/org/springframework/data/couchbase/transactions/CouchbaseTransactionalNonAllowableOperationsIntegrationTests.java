@@ -73,7 +73,7 @@ public class CouchbaseTransactionalNonAllowableOperationsIntegrationTests extend
 		AtomicInteger tryCount = new AtomicInteger(0);
 
 		assertThrowsWithCause(() -> {
-			personService.doInTransaction(tryCount, (ops) -> {
+			personService.doInTransaction(tryCount, ops -> {
 				r.accept(ops);
 				return null;
 			});
@@ -85,7 +85,7 @@ public class CouchbaseTransactionalNonAllowableOperationsIntegrationTests extend
 	@DisplayName("Using existsById() in a transaction is rejected at runtime")
 	@Test
 	public void existsById() {
-		test((ops) -> {
+		test(ops -> {
 			ops.existsById(Person.class).one(WalterWhite.id());
 		});
 	}
@@ -93,7 +93,7 @@ public class CouchbaseTransactionalNonAllowableOperationsIntegrationTests extend
 	@DisplayName("Using findByAnalytics() in a transaction is rejected at runtime")
 	@Test
 	public void findByAnalytics() {
-		test((ops) -> {
+		test(ops -> {
 			ops.findByAnalytics(Person.class).one();
 		});
 	}
@@ -101,7 +101,7 @@ public class CouchbaseTransactionalNonAllowableOperationsIntegrationTests extend
 	@DisplayName("Using findFromReplicasById() in a transaction is rejected at runtime")
 	@Test
 	public void findFromReplicasById() {
-		test((ops) -> {
+		test(ops -> {
 			ops.findFromReplicasById(Person.class).any(WalterWhite.id());
 		});
 	}
@@ -109,7 +109,7 @@ public class CouchbaseTransactionalNonAllowableOperationsIntegrationTests extend
 	@DisplayName("Using upsertById() in a transaction is rejected at runtime")
 	@Test
 	public void upsertById() {
-		test((ops) -> {
+		test(ops -> {
 			ops.upsertById(Person.class).one(WalterWhite);
 		});
 	}
