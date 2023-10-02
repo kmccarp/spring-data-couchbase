@@ -116,7 +116,7 @@ public class CouchbaseExceptionTranslator implements PersistenceExceptionTransla
 			return new TransientDataAccessResourceException(ex.getMessage(), ex);
 		}
 
-		if ((ex instanceof RuntimeException && ex.getCause() instanceof TimeoutException)) {
+		if (ex instanceof RuntimeException && ex.getCause() instanceof TimeoutException) {
 			return new QueryTimeoutException(ex.getMessage(), ex);
 		}
 

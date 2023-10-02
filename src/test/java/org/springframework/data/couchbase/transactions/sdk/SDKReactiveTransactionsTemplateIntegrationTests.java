@@ -212,7 +212,7 @@ public class SDKReactiveTransactionsTemplateIntegrationTests extends JavaIntegra
 
 		assertThrowsWithCause(() -> doInTransaction(ctx -> {
 			attempts.incrementAndGet();
-			return ops.insertById(Person.class).one(WalterWhite).map((p) -> throwSimulateFailureException(p));
+			return ops.insertById(Person.class).one(WalterWhite).map(JavaIntegrationTests::throwSimulateFailureException);
 		}), TransactionFailedException.class, SimulateFailureException.class);
 
 		Person fetched = blocking.findById(Person.class).one(WalterWhite.id());
@@ -230,7 +230,7 @@ public class SDKReactiveTransactionsTemplateIntegrationTests extends JavaIntegra
 			attempts.incrementAndGet();
 			return ops.findById(Person.class).one(person.id()) //
 					.flatMap(p -> ops.replaceById(Person.class).one(p.withFirstName("changed"))) //
-					.map(p -> throwSimulateFailureException(p));
+					.map(JavaIntegrationTests::throwSimulateFailureException);
 		}), TransactionFailedException.class, SimulateFailureException.class);
 
 		Person fetched = blocking.findById(Person.class).one(person.id());
@@ -247,7 +247,7 @@ public class SDKReactiveTransactionsTemplateIntegrationTests extends JavaIntegra
 		assertThrowsWithCause(() -> doInTransaction(ctx -> {
 			attempts.incrementAndGet();
 			return ops.findById(Person.class).one(person.id()).flatMap(p -> ops.removeById(Person.class).oneEntity(p)) //
-					.doOnSuccess(p -> throwSimulateFailureException(p)); // remove has no result
+					.doOnSuccess(JavaIntegrationTests::throwSimulateFailureException); // remove has no result
 		}), TransactionFailedException.class, SimulateFailureException.class);
 
 		Person fetched = blocking.findById(Person.class).one(person.id());
@@ -264,7 +264,7 @@ public class SDKReactiveTransactionsTemplateIntegrationTests extends JavaIntegra
 		assertThrowsWithCause(() -> doInTransaction(ctx -> {
 			attempts.incrementAndGet();
 			return ops.removeByQuery(Person.class).matching(QueryCriteria.where("firstname").eq(person.getFirstname())).all()
-					.elementAt(0).map(p -> throwSimulateFailureException(p));
+					.elementAt(0).map(JavaIntegrationTests::throwSimulateFailureException);
 		}), TransactionFailedException.class, SimulateFailureException.class);
 
 		Person fetched = blocking.findById(Person.class).one(person.id());
@@ -281,7 +281,7 @@ public class SDKReactiveTransactionsTemplateIntegrationTests extends JavaIntegra
 		assertThrowsWithCause(() -> doInTransaction(ctx -> {
 			attempts.incrementAndGet();
 			return ops.findByQuery(Person.class).matching(QueryCriteria.where("firstname").eq(person.getFirstname())).all()
-					.elementAt(0).map(p -> throwSimulateFailureException(p));
+					.elementAt(0).map(JavaIntegrationTests::throwSimulateFailureException);
 		}), TransactionFailedException.class, SimulateFailureException.class);
 
 		assertEquals(1, attempts.get());
@@ -306,7 +306,6 @@ public class SDKReactiveTransactionsTemplateIntegrationTests extends JavaIntegra
 	@DisplayName("Entity must have CAS field during replace")
 	@Test
 	public void replaceEntityWithoutCas() {
-		;
 		PersonWithoutVersion person = blocking.insertById(PersonWithoutVersion.class)
 				.one(new PersonWithoutVersion("Walter", "White"));
 		assertThrowsWithCause(

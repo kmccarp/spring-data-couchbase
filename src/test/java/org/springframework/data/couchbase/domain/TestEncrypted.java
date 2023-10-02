@@ -88,16 +88,18 @@ public class TestEncrypted implements Serializable {
 		}
 		TestEncrypted other = (TestEncrypted) o;
 		//return this.encString == other.encString;
-		if(other.encString == null && this.encString != null)
+		if (other.encString == null && this.encString != null) {
 			return false;
+		}
 		return other.encString.equals(this.encString);
 	}
 
 	public String encToString(){
 		StringBuffer sb = new StringBuffer();
 		for(byte c:encString){
-			if(!sb.isEmpty())
+			if (!sb.isEmpty()) {
 				sb.append(",");
+			}
 			sb.append(c);
 		}
 		return sb.toString();
