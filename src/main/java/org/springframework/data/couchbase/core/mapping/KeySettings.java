@@ -23,7 +23,7 @@ package org.springframework.data.couchbase.core.mapping;
  */
 public class KeySettings {
 
-	private static String DEFAULT_DELIMITER = ".";
+    private static final String DEFAULT_DELIMITER = ".";
 
 	private String commonPrefix;
 

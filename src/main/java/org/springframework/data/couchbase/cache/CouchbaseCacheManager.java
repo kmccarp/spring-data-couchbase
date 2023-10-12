@@ -31,7 +31,7 @@ import org.springframework.data.couchbase.CouchbaseClientFactory;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
-public class CouchbaseCacheManager extends AbstractTransactionSupportingCacheManager {
+public final class CouchbaseCacheManager extends AbstractTransactionSupportingCacheManager {
 
 	private final CouchbaseCacheWriter cacheWriter;
 	private final CouchbaseCacheConfiguration defaultCacheConfig;
@@ -123,7 +123,7 @@ public class CouchbaseCacheManager extends AbstractTransactionSupportingCacheMan
 		return new CouchbaseCache(name, cacheWriter, cacheConfig != null ? cacheConfig : defaultCacheConfig);
 	}
 
-	public static class CouchbaseCacheManagerBuilder {
+    public static final class CouchbaseCacheManagerBuilder {
 
 		private final CouchbaseCacheWriter cacheWriter;
 		private final Map<String, CouchbaseCacheConfiguration> initialCaches = new LinkedHashMap<>();

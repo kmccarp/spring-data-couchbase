@@ -66,13 +66,14 @@ public class Config extends AbstractCouchbaseConfiguration {
 	String connectionString = "127.0.0.1";
 
 	// if running a clusterAwareIntegrationTests, use those properties
-	static Class clusterAware = null;
+	static Class clusterAware;
 
 	static {
 		try {
 			clusterAware = Class.forName("org.springframework.data.couchbase.util.ClusterAwareIntegrationTests");
-			if (clusterAware.getMethod("config").invoke(null) == null)
-				clusterAware = null;
+            if (clusterAware.getMethod("config").invoke(null) == null) {
+                clusterAware = null;
+            }
 		} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
 			e.printStackTrace();
 		}
@@ -134,35 +135,10 @@ public class Config extends AbstractCouchbaseConfiguration {
 
 	@Override
 	public void configureReactiveRepositoryOperationsMapping(ReactiveRepositoryOperationsMapping baseMapping) {
-		try {
-			// comment out references to 'protected' and 'mybucket' - they are only to show how multi-bucket would work
-			// ReactiveCouchbaseTemplate personTemplate = myReactiveCouchbaseTemplate(myCouchbaseClientFactory("protected"),
-			// (MappingCouchbaseConverter) (baseMapping.getDefault().getConverter()));
-			// baseMapping.mapEntity(Person.class, personTemplate); // Person goes in "protected" bucket
-			// ReactiveCouchbaseTemplate userTemplate = myReactiveCouchbaseTemplate(myCouchbaseClientFactory("mybucket"),
-			// (MappingCouchbaseConverter) (baseMapping.getDefault().getConverter()));
-			// baseMapping.mapEntity(User.class, userTemplate); // User goes in "mybucket"
-			// everything else goes in getBucketName() ( which is travel-sample )
-		} catch (Exception e) {
-			throw e;
-		}
 	}
 
 	@Override
 	public void configureRepositoryOperationsMapping(RepositoryOperationsMapping baseMapping) {
-		try {
-			// comment out references to 'protected' and 'mybucket' - they are only to show how multi-bucket would work
-			// CouchbaseTemplate personTemplate = myCouchbaseTemplate(myCouchbaseClientFactory("protected"),
-			// (MappingCouchbaseConverter) (baseMapping.getDefault().getConverter()));
-			// baseMapping.mapEntity(Person.class, personTemplate); // Person goes in "protected" bucket
-			// MappingCouchbaseConverter cvtr = (MappingCouchbaseConverter)baseMapping.getDefault().getConverter();
-			// CouchbaseTemplate userTemplate = myCouchbaseTemplate(myCouchbaseClientFactory("mybucket"),
-			// (MappingCouchbaseConverter) (baseMapping.getDefault().getConverter()));
-			// baseMapping.mapEntity(User.class, userTemplate); // User goes in "mybucket"
-			// everything else goes in getBucketName() ( which is travel-sample )
-		} catch (Exception e) {
-			throw e;
-		}
 	}
 
 	// do not use reactiveCouchbaseTemplate for the name of this method, otherwise the value of that bean
@@ -239,7 +215,7 @@ public class Config extends AbstractCouchbaseConfiguration {
 		return "t"; // this will override '_class', is passed in to new CustomMappingCouchbaseConverter
 	}
 
-	static String scopeName = null;
+	static String scopeName;
 
 	@Override
 	protected String getScopeName() {

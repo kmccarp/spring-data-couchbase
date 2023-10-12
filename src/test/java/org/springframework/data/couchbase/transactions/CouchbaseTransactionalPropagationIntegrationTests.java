@@ -296,57 +296,65 @@ public class CouchbaseTransactionalPropagationIntegrationTests extends JavaInteg
 		@Transactional
 		public void propagationDefault(@Nullable Consumer<CouchbaseOperations> callback) {
 			LOGGER.info("propagationDefault");
-			if (callback != null)
-				callback.accept(ops);
+            if (callback != null) {
+                callback.accept(ops);
+            }
 		}
 
 		@Transactional(propagation = Propagation.REQUIRED)
 		public void propagationRequired(@Nullable Consumer<CouchbaseOperations> callback) {
 			LOGGER.info("propagationRequired");
-			if (callback != null)
-				callback.accept(ops);
+            if (callback != null) {
+                callback.accept(ops);
+            }
 		}
 
 		@Transactional(propagation = Propagation.MANDATORY)
 		public void propagationMandatory(@Nullable Consumer<CouchbaseOperations> callback) {
 			LOGGER.info("propagationMandatory");
-			if (callback != null)
-				callback.accept(ops);
+            if (callback != null) {
+                callback.accept(ops);
+            }
 		}
 
 		@Transactional(propagation = Propagation.NESTED)
 		public void propagationNested(@Nullable Consumer<CouchbaseOperations> callback) {
 			LOGGER.info("propagationNever");
-			if (callback != null)
-				callback.accept(ops);
+            if (callback != null) {
+                callback.accept(ops);
+            }
 		}
 
 		@Transactional(propagation = Propagation.SUPPORTS)
 		public void propagationSupports(@Nullable Consumer<CouchbaseOperations> callback) {
 			LOGGER.info("propagationSupports");
-			if (callback != null)
-				callback.accept(ops);
+            if (callback != null) {
+                callback.accept(ops);
+            }
 		}
 
 		@Transactional(propagation = Propagation.NOT_SUPPORTED)
 		public void propagationNotSupported(@Nullable Consumer<CouchbaseOperations> callback) {
 			LOGGER.info("propagationNotSupported");
-			if (callback != null)
-				callback.accept(ops);
+            if (callback != null) {
+                callback.accept(ops);
+            }
 		}
 
 		@Transactional(propagation = Propagation.REQUIRES_NEW)
 		public void propagationRequiresNew(@Nullable Consumer<CouchbaseOperations> callback) {
 			LOGGER.info("propagationRequiresNew");
-			if (callback != null)
-				callback.accept(ops);
+            if (callback != null) {
+                callback.accept(ops);
+            }
 		}
 
 		@Transactional(propagation = Propagation.NEVER)
 		public void propagationNever(@Nullable Consumer<CouchbaseOperations> callback) {
 			LOGGER.info("propagationNever");
-			if (callback != null)
-				callback.accept(ops);
+            if (callback != null) {
+                callback.accept(ops);
+            }
 		}
 	}
 

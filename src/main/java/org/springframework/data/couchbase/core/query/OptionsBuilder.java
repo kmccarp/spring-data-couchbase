@@ -145,7 +145,7 @@ public class OptionsBuilder {
 		}
 
 		for (Map.Entry<String, Object> entry : optsJson.toMap().entrySet()) {
-			if(!entry.getKey().equals("args")) {
+			if(!"args".equals(entry.getKey())) {
 				txOptions.raw(entry.getKey(), entry.getValue());
 			}
 		}
@@ -334,13 +334,13 @@ public class OptionsBuilder {
 		StringBuilder s = new StringBuilder();
 		InsertOptions.Built b = o.build();
 		s.append("{");
-		s.append("durabilityLevel: " + b.durabilityLevel());
-		s.append(", persistTo: " + b.persistTo());
-		s.append(", replicateTo: " + b.replicateTo());
-		s.append(", timeout: " + b.timeout());
-		s.append(", retryStrategy: " + b.retryStrategy());
-		s.append(", clientContext: " + b.clientContext());
-		s.append(", parentSpan: " + b.parentSpan());
+		s.append("durabilityLevel: ").append(b.durabilityLevel());
+		s.append(", persistTo: ").append(b.persistTo());
+		s.append(", replicateTo: ").append(b.replicateTo());
+		s.append(", timeout: ").append(b.timeout());
+		s.append(", retryStrategy: ").append(b.retryStrategy());
+		s.append(", clientContext: ").append(b.clientContext());
+		s.append(", parentSpan: ").append(b.parentSpan());
 		s.append("}");
 		return s.toString();
 	}
@@ -349,13 +349,13 @@ public class OptionsBuilder {
 		StringBuilder s = new StringBuilder();
 		UpsertOptions.Built b = o.build();
 		s.append("{");
-		s.append("durabilityLevel: " + b.durabilityLevel());
-		s.append(", persistTo: " + b.persistTo());
-		s.append(", replicateTo: " + b.replicateTo());
-		s.append(", timeout: " + b.timeout());
-		s.append(", retryStrategy: " + b.retryStrategy());
-		s.append(", clientContext: " + b.clientContext());
-		s.append(", parentSpan: " + b.parentSpan());
+		s.append("durabilityLevel: ").append(b.durabilityLevel());
+		s.append(", persistTo: ").append(b.persistTo());
+		s.append(", replicateTo: ").append(b.replicateTo());
+		s.append(", timeout: ").append(b.timeout());
+		s.append(", retryStrategy: ").append(b.retryStrategy());
+		s.append(", clientContext: ").append(b.clientContext());
+		s.append(", parentSpan: ").append(b.parentSpan());
 		s.append("}");
 		return s.toString();
 	}
@@ -364,14 +364,14 @@ public class OptionsBuilder {
 		StringBuilder s = new StringBuilder();
 		ReplaceOptions.Built b = o.build();
 		s.append("{");
-		s.append("cas: " + b.cas());
-		s.append(", durabilityLevel: " + b.durabilityLevel());
-		s.append(", persistTo: " + b.persistTo());
-		s.append(", replicateTo: " + b.replicateTo());
-		s.append(", timeout: " + b.timeout());
-		s.append(", retryStrategy: " + b.retryStrategy());
-		s.append(", clientContext: " + b.clientContext());
-		s.append(", parentSpan: " + b.parentSpan());
+		s.append("cas: ").append(b.cas());
+		s.append(", durabilityLevel: ").append(b.durabilityLevel());
+		s.append(", persistTo: ").append(b.persistTo());
+		s.append(", replicateTo: ").append(b.replicateTo());
+		s.append(", timeout: ").append(b.timeout());
+		s.append(", retryStrategy: ").append(b.retryStrategy());
+		s.append(", clientContext: ").append(b.clientContext());
+		s.append(", parentSpan: ").append(b.parentSpan());
 		s.append("}");
 		return s.toString();
 	}
@@ -380,14 +380,14 @@ public class OptionsBuilder {
 		StringBuilder s = new StringBuilder();
 		RemoveOptions.Built b = o.build();
 		s.append("{");
-		s.append("cas: " + b.cas());
-		s.append(", durabilityLevel: " + b.durabilityLevel());
-		s.append(", persistTo: " + b.persistTo());
-		s.append(", replicateTo: " + b.replicateTo());
-		s.append(", timeout: " + b.timeout());
-		s.append(", retryStrategy: " + b.retryStrategy());
-		s.append(", clientContext: " + b.clientContext());
-		s.append(", parentSpan: " + b.parentSpan());
+		s.append("cas: ").append(b.cas());
+		s.append(", durabilityLevel: ").append(b.durabilityLevel());
+		s.append(", persistTo: ").append(b.persistTo());
+		s.append(", replicateTo: ").append(b.replicateTo());
+		s.append(", timeout: ").append(b.timeout());
+		s.append(", retryStrategy: ").append(b.retryStrategy());
+		s.append(", clientContext: ").append(b.clientContext());
+		s.append(", parentSpan: ").append(b.parentSpan());
 		s.append("}");
 		return s.toString();
 	}
@@ -396,14 +396,14 @@ public class OptionsBuilder {
 		StringBuilder s = new StringBuilder();
 		MutateInOptions.Built b = o.build();
 		s.append("{");
-		s.append("cas: " + b.cas());
-		s.append(", durabilityLevel: " + b.durabilityLevel());
-		s.append(", persistTo: " + b.persistTo());
-		s.append(", replicateTo: " + b.replicateTo());
-		s.append(", timeout: " + b.timeout());
-		s.append(", retryStrategy: " + b.retryStrategy());
-		s.append(", clientContext: " + b.clientContext());
-		s.append(", parentSpan: " + b.parentSpan());
+		s.append("cas: ").append(b.cas());
+		s.append(", durabilityLevel: ").append(b.durabilityLevel());
+		s.append(", persistTo: ").append(b.persistTo());
+		s.append(", replicateTo: ").append(b.replicateTo());
+		s.append(", timeout: ").append(b.timeout());
+		s.append(", retryStrategy: ").append(b.retryStrategy());
+		s.append(", clientContext: ").append(b.clientContext());
+		s.append(", parentSpan: ").append(b.parentSpan());
 		s.append("}");
 		return s.toString();
 	}

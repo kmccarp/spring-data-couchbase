@@ -51,10 +51,12 @@ public class AwtPointInShapeEvaluator extends PointInShapeEvaluator {
 
 	@Override
 	public boolean pointInPolygon(Point p, Point... points) {
-		if (points == null)
-			throw new NullPointerException("Polygon must at least contain 3 points");
-		if (points.length < 3)
-			throw new IllegalArgumentException("Polygon must at least contain 3 points");
+        if (points == null) {
+            throw new NullPointerException("Polygon must at least contain 3 points");
+        }
+        if (points.length < 3) {
+            throw new IllegalArgumentException("Polygon must at least contain 3 points");
+        }
 		Path2D awtPolygon = new Path2D.Double(Path2D.WIND_EVEN_ODD, points.length);
 		boolean first = true;
 		for (Point point : points) {

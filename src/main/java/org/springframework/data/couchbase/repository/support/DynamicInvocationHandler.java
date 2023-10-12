@@ -70,8 +70,9 @@ public class DynamicInvocationHandler<T> implements InvocationHandler {
 		sb.append(tab + "{");
 		for (Class c : clazz.getInterfaces()) {
 			sb.append(tab + "  " + c.getSimpleName());
-			if (c.getInterfaces().length > 0)
-				sb.append(dumpInterfaces(c, tab + "  "));
+            if (c.getInterfaces().length > 0) {
+                sb.append(dumpInterfaces(c, tab + "  "));
+            }
 		}
 		sb.append(tab + "}");
 		return sb.toString();
@@ -87,17 +88,17 @@ public class DynamicInvocationHandler<T> implements InvocationHandler {
 		 * the scope, collection and options that may already be set on the proxy
 		 */
 
-		if (method.getName().equals("withOptions")) {
+		if ("withOptions".equals(method.getName())) {
 			return Proxy.newProxyInstance(repositoryClass.getClassLoader(), target.getClass().getInterfaces(),
 					new DynamicInvocationHandler<>(target, (CommonOptions) args[0], collection, scope));
 		}
 
-		if (method.getName().equals("withScope")) {
+		if ("withScope".equals(method.getName())) {
 			return Proxy.newProxyInstance(repositoryClass.getClassLoader(), target.getClass().getInterfaces(),
 					new DynamicInvocationHandler<>(target, options, collection, (String) args[0]));
 		}
 
-		if (method.getName().equals("withCollection")) {
+		if ("withCollection".equals(method.getName())) {
 			return Proxy.newProxyInstance(repositoryClass.getClassLoader(), target.getClass().getInterfaces(),
 					new DynamicInvocationHandler<>(target, options, (String) args[0], scope));
 		}

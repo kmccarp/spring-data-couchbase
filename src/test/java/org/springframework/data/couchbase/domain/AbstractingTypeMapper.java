@@ -37,7 +37,9 @@ public class AbstractingTypeMapper extends DefaultTypeMapper<CouchbaseDocument> 
 	private final String typeKey;
 
 	public static class Type {
-		public static final String ABSTRACTUSER = "abstractuser", USER = "user", OTHERUSER = "otheruser";
+        public static final String ABSTRACTUSER = "abstractuser";
+        public static final String USER = "user";
+        public static final String OTHERUSER = "otheruser";
 	}
 
 	/**

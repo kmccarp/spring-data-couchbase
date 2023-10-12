@@ -64,7 +64,7 @@ public class BasicCouchbasePersistentProperty extends AnnotationBasedPersistentP
 	 */
 	@Override
 	protected Association<CouchbasePersistentProperty> createAssociation() {
-		return new Association<CouchbasePersistentProperty>(this, null);
+		return new Association<>(this, null);
 	}
 
 	/**
@@ -112,11 +112,7 @@ public class BasicCouchbasePersistentProperty extends AnnotationBasedPersistentP
 		if (super.isIdProperty()) {
 			return true;
 		}
-		// is field named "id"
-		if (getField() != null && this.getFieldName().toLowerCase(Locale.ROOT).equals("id")) {
-			return true;
-		}
-		return false;
+        return getField() != null && "id".equals(this.getFieldName().toLowerCase(Locale.ROOT));
 	}
 
 	public boolean isExpirationProperty() {

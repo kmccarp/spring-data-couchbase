@@ -93,7 +93,7 @@ public class ExecutableMutateInByIdOperationSupport implements ExecutableMutateI
 			this.insertPaths.addAll(insertPaths);
 			this.replacePaths.addAll(replacePaths);
 			this.provideCas = provideCas;
-			this.reactiveSupport = new ReactiveMutateInByIdOperationSupport.ReactiveMutateInByIdSupport<T>(template.reactive(), domainType, scope, collection,
+			this.reactiveSupport = new ReactiveMutateInByIdOperationSupport.ReactiveMutateInByIdSupport<>(template.reactive(), domainType, scope, collection,
 					options, persistTo, replicateTo, durabilityLevel, expiry, new NonReactiveSupportWrapper(template.support()), removePaths, upsertPaths, insertPaths, replacePaths, provideCas);
 		}
 

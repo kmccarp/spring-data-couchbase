@@ -203,9 +203,8 @@ public class N1qlUtils {
 	 */
 	public static PersistentPropertyPath<CouchbasePersistentProperty> getPathWithAlternativeFieldNames(
 			CouchbaseConverter converter, PropertyPath property) {
-		PersistentPropertyPath<CouchbasePersistentProperty> path = converter.getMappingContext()
+		return converter.getMappingContext()
 				.getPersistentPropertyPath(property);
-		return path;
 	}
 
 	/**

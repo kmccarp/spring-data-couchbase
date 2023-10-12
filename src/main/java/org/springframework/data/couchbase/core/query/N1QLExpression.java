@@ -24,14 +24,14 @@ import java.util.Iterator;
  * @author Michael Nitschinger
  * @author Michael Reiche
  */
-public class N1QLExpression {
+public final class N1QLExpression {
 	private static final N1QLExpression NULL_INSTANCE = new N1QLExpression("NULL");
 	private static final N1QLExpression TRUE_INSTANCE = new N1QLExpression("TRUE");
 	private static final N1QLExpression FALSE_INSTANCE = new N1QLExpression("FALSE");
 	private static final N1QLExpression MISSING_INSTANCE = new N1QLExpression("MISSING");
 	private static final N1QLExpression EMPTY_INSTANCE = new N1QLExpression("");
 
-	private Object value;
+    private final Object value;
 
 	private N1QLExpression(final Object value) {
 		this.value = value;

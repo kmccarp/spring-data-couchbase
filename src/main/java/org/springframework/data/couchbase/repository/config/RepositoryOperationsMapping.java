@@ -35,8 +35,8 @@ import org.springframework.util.Assert;
  */
 public class RepositoryOperationsMapping {
 	private CouchbaseOperations defaultOperations;
-	private Map<String, CouchbaseOperations> byRepository = new HashMap<>();
-	private Map<String, CouchbaseOperations> byEntity = new HashMap<>();
+    private final Map<String, CouchbaseOperations> byRepository = new HashMap<>();
+    private final Map<String, CouchbaseOperations> byEntity = new HashMap<>();
 
 	/**
 	 * Creates a new mapping, setting the default fallback to use by otherwise non mapped repositories.

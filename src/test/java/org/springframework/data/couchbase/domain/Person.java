@@ -81,7 +81,7 @@ public class Person extends AbstractEntity implements Persistable<Object> {
 	static String optional(String name, Optional<String> obj) {
 		if (obj != null) {
 			if (obj.isPresent()) {
-				return ("  " + name + ": '" + obj.get() + "'");
+				return "  " + name + ": '" + obj.get() + "'";
 			} else {
 				return "  " + name + ": null";
 			}
@@ -94,7 +94,7 @@ public class Person extends AbstractEntity implements Persistable<Object> {
 	}
 
 	public void setFirstname(String firstname) {
-		this.firstname = firstname == null ? null : (Optional.ofNullable(firstname.equals("") ? null : firstname));
+		this.firstname = firstname == null ? null : (Optional.ofNullable("".equals(firstname) ? null : firstname));
 	}
 
 	public void setFirstname(Optional<String> firstname) {
@@ -106,7 +106,7 @@ public class Person extends AbstractEntity implements Persistable<Object> {
 	}
 
 	public void setLastname(String lastname) {
-		this.lastname = lastname == null ? null : (Optional.ofNullable(lastname.equals("") ? null : lastname));
+		this.lastname = lastname == null ? null : (Optional.ofNullable("".equals(lastname) ? null : lastname));
 	}
 
 	public void setLastname(Optional lastname) {
@@ -144,26 +144,28 @@ public class Person extends AbstractEntity implements Persistable<Object> {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Person : {\n");
-		sb.append("  id : " + getId());
+		sb.append("  id : ").append(getId());
 		sb.append(optional(", firstname", firstname));
 		sb.append(optional(", lastname", lastname));
-		if (middlename != null)
-			sb.append(", middlename : '" + middlename + "'");
-		sb.append(", version : " + version);
+        if (middlename != null) {
+            
+                    sb.append(", middlename : '").append(middlename).append("'");
+        }
+		sb.append(", version : ").append(version);
 		if (creator != null) {
-			sb.append(", creator : " + creator);
+			sb.append(", creator : ").append(creator);
 		}
 		if (creationDate != 0) {
-			sb.append(", creationDate : " + creationDate);
+			sb.append(", creationDate : ").append(creationDate);
 		}
 		if (lastModifiedBy != null) {
-			sb.append(", lastModifiedBy : " + lastModifiedBy);
+			sb.append(", lastModifiedBy : ").append(lastModifiedBy);
 		}
 		if (lastModification != 0) {
-			sb.append(", lastModification : " + lastModification);
+			sb.append(", lastModification : ").append(lastModification);
 		}
 		if (getAddress() != null) {
-			sb.append(", address : " + getAddress().toString());
+			sb.append(", address : ").append(getAddress().toString());
 		}
 		sb.append("\n}");
 		return sb.toString();

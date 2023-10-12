@@ -41,15 +41,18 @@ public class Library {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
 		Library library = (Library) o;
 
-		if (id != null ? !id.equals(library.id) : library.id != null)
-			return false;
+        if (id != null ? !id.equals(library.id) : library.id != null) {
+            return false;
+        }
 		return books != null ? books.equals(library.books) : library.books == null;
 	}
 

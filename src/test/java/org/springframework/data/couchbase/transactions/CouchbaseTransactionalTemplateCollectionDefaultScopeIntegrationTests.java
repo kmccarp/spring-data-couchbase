@@ -107,9 +107,7 @@ public class CouchbaseTransactionalTemplateCollectionDefaultScopeIntegrationTest
   @Test
   public void committedInsert() {
     AtomicInteger tryCount = new AtomicInteger(0);
-    Person inserted = personService.doInTransaction(tryCount, (ops) -> {
-      return ops.insertById(Person.class).inScope(scopeName).inCollection(collectionName).one(WalterWhite.withIdFirstname());
-    });
+    Person inserted = personService.doInTransaction(tryCount, ops -> ops.insertById(Person.class).inScope(scopeName).inCollection(collectionName).one(WalterWhite.withIdFirstname()));
 
     Person fetched = operations.findById(Person.class).inScope(scopeName).inCollection(collectionName).one(inserted.id());
     assertEquals(inserted.getFirstname(), fetched.getFirstname());
@@ -122,7 +120,7 @@ public class CouchbaseTransactionalTemplateCollectionDefaultScopeIntegrationTest
     AtomicInteger tryCount = new AtomicInteger();
     Person person = operations.insertById(Person.class).inScope(scopeName).inCollection(collectionName).one(WalterWhite);
 
-    personService.fetchAndReplace(person.id(), tryCount, (p) -> {
+    personService.fetchAndReplace(person.id(), tryCount, p -> {
       p.setFirstname("changed");
       return p;
     });
@@ -151,9 +149,7 @@ public class CouchbaseTransactionalTemplateCollectionDefaultScopeIntegrationTest
     AtomicInteger tryCount = new AtomicInteger();
     Person person = operations.insertById(Person.class).inScope(scopeName).inCollection(collectionName).one(WalterWhite.withIdFirstname());
 
-    List<RemoveResult> removed = personService.doInTransaction(tryCount, ops -> {
-      return ops.removeByQuery(Person.class).inScope(scopeName).inCollection(collectionName).matching(QueryCriteria.where("firstname").eq(person.getFirstname())).all();
-    });
+    List<RemoveResult> removed = personService.doInTransaction(tryCount, ops -> ops.removeByQuery(Person.class).inScope(scopeName).inCollection(collectionName).matching(QueryCriteria.where("firstname").eq(person.getFirstname())).all());
 
     Person fetched = operations.findById(Person.class).inScope(scopeName).inCollection(collectionName).one(person.id());
     assertNull(fetched);
@@ -167,9 +163,7 @@ public class CouchbaseTransactionalTemplateCollectionDefaultScopeIntegrationTest
     AtomicInteger tryCount = new AtomicInteger(0);
     Person person = operations.insertById(Person.class).inScope(scopeName).inCollection(collectionName).one(WalterWhite.withIdFirstname());
 
-    List<Person> found = personService.doInTransaction(tryCount, ops -> {
-      return ops.findByQuery(Person.class).inScope(scopeName).inCollection(collectionName).matching(QueryCriteria.where("firstname").eq(person.getFirstname())).all();
-    });
+    List<Person> found = personService.doInTransaction(tryCount, ops -> ops.findByQuery(Person.class).inScope(scopeName).inCollection(collectionName).matching(QueryCriteria.where("firstname").eq(person.getFirstname())).all());
 
     assertEquals(1, found.size());
   }
@@ -181,7 +175,7 @@ public class CouchbaseTransactionalTemplateCollectionDefaultScopeIntegrationTest
     AtomicReference<String> id = new AtomicReference<>();
 
     assertThrowsWithCause(() -> {
-      personService.doInTransaction(tryCount, (ops) -> {
+      personService.doInTransaction(tryCount, ops -> {
         ops.insertById(Person.class).inScope(scopeName).inCollection(collectionName).one(WalterWhite);
         id.set(WalterWhite.id());
         throw new SimulateFailureException();
@@ -200,7 +194,7 @@ public class CouchbaseTransactionalTemplateCollectionDefaultScopeIntegrationTest
     Person person = operations.insertById(Person.class).inScope(scopeName).inCollection(collectionName).one(WalterWhite);
 
     assertThrowsWithCause(() -> {
-      personService.doInTransaction(tryCount, (ops) -> {
+      personService.doInTransaction(tryCount, ops -> {
         Person p = ops.findById(Person.class).inScope(scopeName).inCollection(collectionName).one(person.id());
         ops.replaceById(Person.class).inScope(scopeName).inCollection(collectionName).one(p.withFirstName("changed"));
         throw new SimulateFailureException();
@@ -219,7 +213,7 @@ public class CouchbaseTransactionalTemplateCollectionDefaultScopeIntegrationTest
     Person person = operations.insertById(Person.class).inScope(scopeName).inCollection(collectionName).one(WalterWhite);
 
     assertThrowsWithCause(() -> {
-      personService.doInTransaction(tryCount, (ops) -> {
+      personService.doInTransaction(tryCount, ops -> {
         Person p = ops.findById(Person.class).inScope(scopeName).inCollection(collectionName).one(person.id());
         ops.removeById(Person.class).inScope(scopeName).inCollection(collectionName).oneEntity(p);
         throw new SimulateFailureException();
@@ -267,9 +261,7 @@ public class CouchbaseTransactionalTemplateCollectionDefaultScopeIntegrationTest
 
   @Test
   public void shouldRollbackAfterException() {
-    assertThrowsWithCause(() -> {
-      personService.insertThenThrow();
-    }, TransactionSystemUnambiguousException.class, SimulateFailureException.class);
+    assertThrowsWithCause(personService::insertThenThrow, TransactionSystemUnambiguousException.class, SimulateFailureException.class);
 
     Long count = operations.findByQuery(Person.class).withConsistency(REQUEST_PLUS).inScope(scopeName).inCollection(collectionName).count();
     assertEquals(0, count, "should have done roll back and left 0 entries");
@@ -358,7 +350,7 @@ public class CouchbaseTransactionalTemplateCollectionDefaultScopeIntegrationTest
     AtomicInteger tryCount = new AtomicInteger();
     Person person = operations.insertById(Person.class).inScope(scopeName).inCollection(collectionName).one(WalterWhite);
     assertThrowsWithCause(() -> {
-      personService.doInTransaction(tryCount, (ops) -> {
+      personService.doInTransaction(tryCount, ops -> {
         Person p = ops.findById(Person.class).inScope(scopeName).inCollection(collectionName).one(person.id());
         ops.removeById(Person.class).inScope(scopeName).inCollection(collectionName).one(p.id());
         return p;
