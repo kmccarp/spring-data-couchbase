@@ -359,8 +359,7 @@ public class CouchbaseRepositoryFieldLevelEncryptionIntegrationTests extends Clu
 
 			@Override
 			public Map<String, Object> encrypt(byte[] plaintext, String encrypterAlias) {
-				Map<String, Object> encryptedNode = cryptoManager.encrypt(plaintext, encrypterAlias);
-				return encryptedNode;
+				return cryptoManager.encrypt(plaintext, encrypterAlias);
 			}
 
 			@Override

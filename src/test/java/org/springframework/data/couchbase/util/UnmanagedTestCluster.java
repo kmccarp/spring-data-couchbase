@@ -53,7 +53,7 @@ public class UnmanagedTestCluster extends TestCluster {
 	private final String protocol;
 	private final String hostname;
 	private volatile String bucketname;
-	private long startTime = System.currentTimeMillis();
+	private final long startTime = System.currentTimeMillis();
 	private boolean usingCloud;
 
 	UnmanagedTestCluster(final Properties properties) {
@@ -65,7 +65,7 @@ public class UnmanagedTestCluster extends TestCluster {
 			eventBus.subscribe(event -> System.err.println("Event: " + event));
 			Collection<SeedNode> seedNodes = ConnectionStringUtil.seedNodesFromConnectionString(ConnectionString.create("couchbases://" + seed), true,
 					true, eventBus);
-			hostname = seedNodes.stream().filter((node) -> node.kvPort() != null).findFirst().get().address().toString();
+			hostname = seedNodes.stream().filter(node -> node.kvPort() != null).findFirst().get().address();
 			seedHost = "couchbases://" + seed;
 		} else {
 			protocol = "http";
@@ -168,7 +168,7 @@ public class UnmanagedTestCluster extends TestCluster {
 			int healthy = 0;
 			for (Map<String, Object> node : nodes) {
 				String status = (String) node.get("status");
-				if (status.equals("healthy")) {
+				if ("healthy".equals(status)) {
 					healthy++;
 				}
 			}
@@ -182,7 +182,7 @@ public class UnmanagedTestCluster extends TestCluster {
 	@Override
 	public void close() {
 		try {
-			if (!bucketname.equals("my_bucket") && !usingCloud) {
+			if (!"my_bucket".equals(bucketname) && !usingCloud) {
 				httpClient
 						.newCall(new Request.Builder().header("Authorization", Credentials.basic(adminUsername, adminPassword))
 								.url(protocol + "://" + hostname + ":" + seedPort + "/pools/default/buckets/" + bucketname).delete()

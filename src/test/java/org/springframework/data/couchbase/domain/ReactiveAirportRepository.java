@@ -115,12 +115,10 @@ public interface ReactiveAirportRepository
 	Flux<RemoveResult> deleteByIataAnnotated(String iata);
 
 	// This is not efficient. See findAllByIataLike for efficient reactive paging
-	default public Mono<Page<Airport>> findAllAirportsPaged(Pageable pageable) {
-		return count().flatMap(airportCount -> {
-			return findAll(pageable.getSort())
+	public default Mono<Page<Airport>> findAllAirportsPaged(Pageable pageable) {
+		return count().flatMap(airportCount -> findAll(pageable.getSort())
 					.buffer(pageable.getPageSize(), (pageable.getPageNumber() * pageable.getPageSize()))
 					.elementAt(pageable.getPageNumber(), new ArrayList<>())
-					.map(airports -> new PageImpl<Airport>(airports, pageable, airportCount));
-		});
+					.map(airports -> new PageImpl<Airport>(airports, pageable, airportCount)));
 	}
 }

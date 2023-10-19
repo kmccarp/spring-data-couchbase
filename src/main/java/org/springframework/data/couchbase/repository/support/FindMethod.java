@@ -66,8 +66,9 @@ public class FindMethod {
             }
             int j;
             for (j = 0; j < l; j++) {
-                if (!params[j].isAssignableFrom(parameterTypes[j]))
-                    break;
+							if (!params[j].isAssignableFrom(parameterTypes[j])) {
+								break;
+							}
             }
             // If so, add it to the list
             if (j == l) {

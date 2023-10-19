@@ -31,6 +31,6 @@ public class ObjectId {
 	String id;
 
 	public String toString() {
-		return id.toString();
+		return id;
 	}
 }

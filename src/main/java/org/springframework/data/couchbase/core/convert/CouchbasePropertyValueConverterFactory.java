@@ -51,7 +51,7 @@ public class CouchbasePropertyValueConverterFactory implements PropertyValueConv
 	private final CryptoManager cryptoManager;
 	private final ObjectMapper objectMapper;
 	private final Map<Class<? extends Annotation>, Class<?>> annotationToConverterMap;
-	static protected final Map<Class<?>, Optional<PropertyValueConverter<?, ?, ?>>> converterCacheForType = new ConcurrentHashMap<>();
+	protected static final Map<Class<?>, Optional<PropertyValueConverter<?, ?, ?>>> converterCacheForType = new ConcurrentHashMap<>();
 
 	public CouchbasePropertyValueConverterFactory(CryptoManager cryptoManager,
 			Map<Class<? extends Annotation>, Class<?>> annotationToConverterMap, ObjectMapper objectMapper) {

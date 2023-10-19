@@ -119,7 +119,7 @@ public class SDKReactiveTransactionsPersonIntegrationTests extends JavaIntegrati
 		Person person = cbTmpl.insertById(Person.class).one(WalterWhite);
 		Mono<TransactionResult> result = couchbaseClientFactory.getCluster().reactive().transactions()
 				.run(ctx -> rxCBTmpl.findById(Person.class).one(person.id()) //
-						.map((pp) -> updateOutOfTransaction(cbTmpl, pp, tryCount.incrementAndGet()))
+						.map(pp -> updateOutOfTransaction(cbTmpl, pp, tryCount.incrementAndGet()))
 						.flatMap(ppp -> rxCBTmpl.replaceById(Person.class).one(ppp.withFirstName("Dave"))));
 		TransactionResult txResult = result.block();
 

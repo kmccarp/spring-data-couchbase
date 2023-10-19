@@ -84,10 +84,8 @@ public class SDKTransactionsNonBlockingThreadIntegrationTests extends JavaIntegr
 	@DisplayName("Trying to run a reactive transaction on a non-blocking thread should work")
 	@Test
 	public void reactiveTransactionOnNonBlockingThread() {
-		Mono.just(1).publishOn(Schedulers.parallel()).flatMap(ignore -> {
-			return couchbaseClientFactory.getCluster().reactive().transactions().run(ctx -> {
+		Mono.just(1).publishOn(Schedulers.parallel()).flatMap(ignore -> couchbaseClientFactory.getCluster().reactive().transactions().run(ctx -> {
 				return reactiveOps.insertById(Person.class).one(new Person("Walter", "White"));
-			});
-		}).block();
+			})).block();
 	}
 }
